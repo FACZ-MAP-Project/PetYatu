@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 
@@ -20,7 +21,9 @@ class _SwipeCardState extends State<SwipeCard>
     with SingleTickerProviderStateMixin {
   late SwiperController _swiperController;
   late AnimationController _animationController;
-  late Animation<double> _animation;
+
+  List<bool> likedItems = List.generate(17, (index) => false);
+  List<int> totalLikes = List.generate(17, (index) => Random().nextInt(50) + 1);
 
   @override
   void initState() {
@@ -31,12 +34,6 @@ class _SwipeCardState extends State<SwipeCard>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-
-    _animation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController)
-          ..addListener(() {
-            setState(() {});
-          });
   }
 
   @override
@@ -55,8 +52,9 @@ class _SwipeCardState extends State<SwipeCard>
         return _itemBuilder(index);
       },
       loop: true,
-      pagination: const SwiperPagination(),
-      control: const SwiperControl(),
+      layout: SwiperLayout.TINDER,
+      itemWidth: MediaQuery.of(context).size.width,
+      itemHeight: MediaQuery.of(context).size.height,
     );
   }
 
@@ -112,11 +110,20 @@ class _SwipeCardState extends State<SwipeCard>
         const SizedBox(height: 10.0),
         Row(
           children: [
-            ElevatedButton(
-              onPressed: () {},
+            ElevatedButton.icon(
+              onPressed: () {
+                setState(() {
+                  if (!likedItems[index]) {
+                    totalLikes[index]++;
+                  } else {
+                    totalLikes[index]--;
+                  }
+                  likedItems[index] = !likedItems[index];
+                });
+              },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
-                  Colors.pink,
+                  likedItems[index] ? Colors.pink : Colors.grey,
                 ),
                 overlayColor: MaterialStateProperty.all(
                   Colors.white.withOpacity(0.3),
@@ -127,16 +134,20 @@ class _SwipeCardState extends State<SwipeCard>
                   ),
                 ),
               ),
-              child: const Text(
-                "Like",
-                style: TextStyle(
+              icon: Icon(
+                likedItems[index] ? Icons.favorite : Icons.favorite_border,
+                color: Colors.white,
+              ),
+              label: Text(
+                'Like (${totalLikes[index]})',
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
                 ),
               ),
             ),
             const SizedBox(width: 10.0),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: () {},
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
@@ -151,8 +162,12 @@ class _SwipeCardState extends State<SwipeCard>
                   ),
                 ),
               ),
-              child: const Text(
-                "Adopt",
+              icon: const Icon(
+                Icons.pets,
+                color: Colors.white,
+              ),
+              label: const Text(
+                "Adopt Me",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,

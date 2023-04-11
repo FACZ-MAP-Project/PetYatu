@@ -25,27 +25,27 @@ class RootAppState extends State<RootApp> {
     );
   }
 
-  AppBar _appBar() {
-    return AppBar(
-      centerTitle: true,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('lib/assets/images/logo.png',
-                fit: BoxFit.contain, height: 32),
-          ),
-          const Text('PetYatu',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 32,
-              )),
-        ],
-      ),
-    );
-  }
+  // AppBar _appBar() {
+  //   return AppBar(
+  //     centerTitle: true,
+  //     title: Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         Padding(
+  //           padding: const EdgeInsets.all(8.0),
+  //           child: Image.asset('lib/assets/images/logo.png',
+  //               fit: BoxFit.contain, height: 32),
+  //         ),
+  //         const Text('PetYatu',
+  //             style: TextStyle(
+  //               color: Colors.black,
+  //               fontWeight: FontWeight.bold,
+  //               fontSize: 32,
+  //             )),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   IndexedStack _tabBody() {
     return IndexedStack(

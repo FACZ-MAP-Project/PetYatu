@@ -11,25 +11,64 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> photoUrls = [
+  List<String> photoUrls = [
     'https://placekitten.com/200/300',
     'https://placekitten.com/202/300',
     'https://placekitten.com/207/300',
     'https://placekitten.com/204/300',
+    'https://cdn.pixabay.com/photo/2015/02/25/17/56/cat-649164__340.jpg',
+    'https://cdn.pixabay.com/photo/2014/11/30/14/11/kitty-551554__340.jpg',
+    'https://placekitten.com/198/300',
+    'https://placekitten.com/209/300',
+    'https://cdn.pixabay.com/photo/2016/09/05/21/37/cat-1647775__340.jpg',
+    'https://cdn.pixabay.com/photo/2016/01/20/13/05/cat-1151519__340.jpg',
+    'https://placekitten.com/197/300',
+    'https://placekitten.com/165/300',
+    'https://cdn.pixabay.com/photo/2014/04/13/20/49/cat-323262__340.jpg',
+    'https://placekitten.com/300/300',
+    'https://placekitten.com/400/300',
+    'https://placekitten.com/520/300',
+    'https://cdn.pixabay.com/photo/2014/11/30/14/11/kitty-551554__340.jpg',
   ];
 
-  final List<String> names = [
+  List<String> names = [
     'Kitty',
     'Tompok',
     'Melly',
     'Kapla',
+    'Mittens',
+    'Whiskers',
+    'Fluffy',
+    'Snowball',
+    'Boots',
+    'Shadow',
+    'Simba',
+    'Garfield',
+    'Socks',
+    'Marmalade',
+    'Luna',
+    'Oreo',
+    'Felix'
   ];
 
-  final List<String> descriptions = [
-    "Healty and active",
-    "Healty and active",
-    "Healty and active",
-    "Healty and active",
+  List<String> descriptions = [
+    'Kitty is a calico cat who loves to cuddle.',
+    'Tompok is a gray tabby who is very playful.',
+    'Melly is a black and white tuxedo cat who is very curious.',
+    'Kapla is a Siamese cat who is very vocal.',
+    'Mittens is a white cat with black paws who loves to nap.',
+    'Whiskers is a brown tabby who loves to play with toys.',
+    'Fluffy is a long-haired cat who is very soft and cuddly.',
+    'Snowball is a white cat who loves to play in the snow.',
+    'Boots is a black cat with white paws who is very fast.',
+    'Shadow is a black cat who is very mysterious.',
+    'Simba is an orange tabby who loves to sunbathe.',
+    'Garfield is a ginger cat who loves to eat lasagna.',
+    'Socks is a gray and white cat who loves to nap in socks.',
+    'Marmalade is an orange cat who loves to explore.',
+    'Luna is a black cat who loves to howl at the moon.',
+    'Oreo is a black and white cat who loves to play hide and seek.',
+    'Felix is a black and white cartoon cat who loves to get into mischief.'
   ];
 
   @override
@@ -75,11 +114,12 @@ class _HomePageState extends State<HomePage> {
 
   TabBarView barView() {
     return TabBarView(
+      physics: const NeverScrollableScrollPhysics(),
       children: [
-        Center(child: Text('Cats')),
+        const Center(child: Text('Cats')),
         SwipeCard(
             photoUrls: photoUrls, names: names, descriptions: descriptions),
-        Center(child: Text('Favorites')),
+        const Center(child: Text('Favorites')),
       ],
     );
   }
