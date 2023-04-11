@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:petyatu/views/profile_page.dart';
 
 class SwipeCard extends StatefulWidget {
   final List<String> photoUrls;
@@ -14,16 +15,17 @@ class SwipeCard extends StatefulWidget {
       required this.descriptions});
 
   @override
-  _SwipeCardState createState() => _SwipeCardState();
+  SwipeCardState createState() => SwipeCardState();
 }
 
-class _SwipeCardState extends State<SwipeCard>
+class SwipeCardState extends State<SwipeCard>
     with SingleTickerProviderStateMixin {
   late SwiperController _swiperController;
   late AnimationController _animationController;
 
   List<bool> likedItems = List.generate(17, (index) => false);
   List<int> totalLikes = List.generate(17, (index) => Random().nextInt(50) + 1);
+  List<bool> star = List.generate(17, (index) => false);
 
   @override
   void initState() {
@@ -112,6 +114,38 @@ class _SwipeCardState extends State<SwipeCard>
           children: [
             ElevatedButton.icon(
               onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const Profile();
+                }));
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Colors.lightBlue,
+                ),
+                overlayColor: MaterialStateProperty.all(
+                  Colors.white.withOpacity(0.3),
+                ),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+              icon: const Icon(
+                Icons.pets,
+                color: Colors.white,
+              ),
+              label: const Text(
+                "Adopt Me",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10.0),
+            ElevatedButton.icon(
+              onPressed: () {
                 setState(() {
                   if (!likedItems[index]) {
                     totalLikes[index]++;
@@ -139,7 +173,7 @@ class _SwipeCardState extends State<SwipeCard>
                 color: Colors.white,
               ),
               label: Text(
-                'Like (${totalLikes[index]})',
+                totalLikes[index].toString(),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -147,33 +181,26 @@ class _SwipeCardState extends State<SwipeCard>
               ),
             ),
             const SizedBox(width: 10.0),
-            ElevatedButton.icon(
-              onPressed: () {},
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Colors.lightBlue,
-                ),
-                overlayColor: MaterialStateProperty.all(
-                  Colors.white.withOpacity(0.3),
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: star[index] ? Colors.yellow : Colors.grey,
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    star[index] = !star[index];
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Icon(
+                    star[index] ? Icons.star : Icons.star_border,
+                    color: Colors.white,
                   ),
                 ),
               ),
-              icon: const Icon(
-                Icons.pets,
-                color: Colors.white,
-              ),
-              label: const Text(
-                "Adopt Me",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                ),
-              ),
-            ),
+            )
           ],
         ),
         const SizedBox(height: 10.0),
