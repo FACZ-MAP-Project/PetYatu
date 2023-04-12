@@ -118,10 +118,10 @@ class _HomePageState extends State<HomePage> {
     return TabBarView(
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        CatMoment(),
+        const CatMoment(),
         SwipeCard(
             photoUrls: photoUrls, names: names, descriptions: descriptions),
-        Favorites(),
+        const Favorites(),
       ],
     );
   }
