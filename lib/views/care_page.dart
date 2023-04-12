@@ -7,7 +7,7 @@ class Care extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _appBar(), body: const Center(child: Text('Care')));
+    return Scaffold(appBar: _appBar(), body: careView());
   }
 
   AppBar _appBar() {
@@ -29,6 +29,15 @@ class Care extends StatelessWidget {
               )),
         ],
       ),
+    );
+  }
+
+  Widget careView() {
+    return ListView(
+      padding: const EdgeInsets.all(8),
+      children: const [
+        Text('Care'),
+      ],
     );
   }
 }
