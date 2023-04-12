@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
-import 'package:petyatu/views/profile_page.dart';
+import 'package:petyatu/views/profile_cat_page.dart';
 
 class SwipeCard extends StatefulWidget {
   final List<String> photoUrls;

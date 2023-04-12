@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:petyatu/views/home_page.dart';
+import 'package:petyatu/views/search_page.dart';
+import 'package:petyatu/views/care_page.dart';
+import 'package:petyatu/views/profile_person_page.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -52,9 +55,9 @@ class RootAppState extends State<RootApp> {
       index: _selectedIndex,
       children: const [
         HomePage(),
-        Center(child: Text('Search')),
-        Center(child: Text('Care')),
-        Center(child: Text('Profile')),
+        Search(),
+        Care(),
+        Profile(),
       ],
     );
   }

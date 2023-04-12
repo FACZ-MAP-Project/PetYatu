@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:petyatu/views/swipe_card.dart';
+import 'package:petyatu/views/favorites_page.dart';
+import 'package:petyatu/views/moment_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -116,10 +118,10 @@ class _HomePageState extends State<HomePage> {
     return TabBarView(
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        const Center(child: Text('Cats')),
+        CatMoment(),
         SwipeCard(
             photoUrls: photoUrls, names: names, descriptions: descriptions),
-        const Center(child: Text('Favorites')),
+        Favorites(),
       ],
     );
   }
