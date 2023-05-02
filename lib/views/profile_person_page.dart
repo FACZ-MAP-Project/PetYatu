@@ -8,7 +8,22 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _appBar(), body: const Center(child: Text('Profile')));
+        appBar: _appBar(),
+        body: Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Profile'),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  },
+                  child: Text('Logout'),
+                ),
+              ],
+            )));
   }
 
   AppBar _appBar() {

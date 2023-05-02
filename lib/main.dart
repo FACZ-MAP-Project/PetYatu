@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:petyatu/views/root_app.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+import 'package:petyatu/views/root_app.dart';
+import 'package:petyatu/views/login_page.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MainApp());
 }
 
@@ -20,6 +28,11 @@ class MainApp extends StatelessWidget {
       ),
       title: 'PetYatu',
       home: const RootApp(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/root': (context) => const RootApp(),
+      },
     );
   }
 }
