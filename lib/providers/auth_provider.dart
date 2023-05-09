@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/AppUser.dart';
+import '../models/app_user.dart';
 
 class AuthProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,7 +15,7 @@ class AuthProvider with ChangeNotifier {
         password: appUser.password,
       );
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -30,7 +30,6 @@ class AuthProvider with ChangeNotifier {
       // AppUser? firebaseUser = result.user as AppUser?;
       AppUser? firebaseUser =
           result.user != null ? AppUser.withId(result.user!.uid) : null;
-      print('User ID: ${firebaseUser!.uid}');
       if (firebaseUser != null) {
         // save user info to firestore
         await _firestore.collection('users').doc(firebaseUser.uid).set(
@@ -44,7 +43,7 @@ class AuthProvider with ChangeNotifier {
         );
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }
