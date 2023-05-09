@@ -7,6 +7,18 @@ class AuthProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // login user with email and password
+  Future<void> loginUser(AppUser appUser) async {
+    try {
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+        email: appUser.email,
+        password: appUser.password,
+      );
+    } catch (e) {
+      throw e;
+    }
+  }
+
   // register user with email and password
   Future<void> registerUser(AppUser appUser) async {
     try {
@@ -18,6 +30,7 @@ class AuthProvider with ChangeNotifier {
       // AppUser? firebaseUser = result.user as AppUser?;
       AppUser? firebaseUser =
           result.user != null ? AppUser.withId(result.user!.uid) : null;
+      print('User ID: ${firebaseUser!.uid}');
       if (firebaseUser != null) {
         // save user info to firestore
         await _firestore.collection('users').doc(firebaseUser.uid).set(

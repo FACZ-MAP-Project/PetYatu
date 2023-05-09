@@ -97,6 +97,13 @@ class _RegisterPageState extends State<RegisterPage> {
               onPressed: () => _registerUser(authProvider),
               child: Text('Register'),
             ),
+            SizedBox(height: 16.0),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed('/login');
+              },
+              child: Text('Login'),
+            ),
           ],
         ),
       ),
