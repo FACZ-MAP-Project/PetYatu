@@ -7,6 +7,7 @@ import 'package:petyatu/views/root_app.dart';
 import 'package:petyatu/views/login_page.dart';
 import 'views/register_page.dart';
 import 'providers/auth_provider.dart';
+import 'views/forget_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +39,7 @@ class MainApp extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/root': (context) => const RootApp(),
           '/register': (context) => const RegisterPage(),
+          '/forget-password': (context) => const ForgetPasswordPage(),
         },
       ),
     );
