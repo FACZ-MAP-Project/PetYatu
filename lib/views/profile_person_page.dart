@@ -210,7 +210,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ElevatedButton(
               onPressed: () {
                 // Update user profile with new information
-                // and navigate back to user profile page
+                // String newName = nameController.text;
+                // String newEmail = emailController.text;
+                // String newLocation = locationController.text;
+                // String newBio = bioController.text;
+                // String newAge = ageController.text;
+                // String newGender = genderController.text;
+                // Save newAge and newGender to user profile
+                // Navigate back to user profile page
                 Navigator.pop(context);
               },
               child: Text('Save Changes'),
