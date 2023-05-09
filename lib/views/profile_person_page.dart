@@ -80,7 +80,12 @@ class Profile extends StatelessWidget {
             ),
             SizedBox(height: 10.0),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditProfilePage()),
+                );
+              },
               child: Text('Edit Profile'),
             ),
           ],
@@ -109,6 +114,109 @@ class Profile extends StatelessWidget {
                 fontSize: 32,
               )),
         ],
+      ),
+    );
+  }
+}
+
+class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({Key? key}) : super(key: key);
+
+  @override
+  _EditProfilePageState createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = 'John Doe';
+    emailController.text = 'johndoe@gmail.com';
+    locationController.text = 'Klang, Selangor, Malaysia';
+    ageController.text = '22';
+    genderController.text = 'Male';
+
+    bioController.text =
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in massa neque. Nulla commodo nulla quis facilisis bibendum. Morbi eget diam vitae ex rhoncus tincidunt. Mauris posuere risus vel enim dapibus, nec sollicitudin metus elementum. Duis sit amet est nec velit feugiat volutpat. Sed in sodales odio.';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Profile'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10.0),
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10.0),
+            TextField(
+              controller: locationController,
+              decoration: InputDecoration(
+                labelText: 'Location',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10.0),
+            TextField(
+              controller: ageController,
+              decoration: InputDecoration(
+                labelText: 'Age',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10.0),
+            TextField(
+              controller: genderController,
+              decoration: InputDecoration(
+                labelText: 'Gender',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10.0),
+            TextField(
+              controller: bioController,
+              maxLines: 5,
+              decoration: InputDecoration(
+                labelText: 'Bio',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10.0),
+            ElevatedButton(
+              onPressed: () {
+                // Update user profile with new information
+                // and navigate back to user profile page
+                Navigator.pop(context);
+              },
+              child: Text('Save Changes'),
+            ),
+          ],
+        ),
       ),
     );
   }
