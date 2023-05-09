@@ -51,6 +51,34 @@ class Profile extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10.0),
+            Text(
+              'Profile: 22, Male',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.grey[600],
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Text(
+              'Bio:',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 5.0),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text(
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in massa neque. Nulla commodo nulla quis facilisis bibendum. Morbi eget diam vitae ex rhoncus tincidunt. Mauris posuere risus vel enim dapibus, nec sollicitudin metus elementum. Duis sit amet est nec velit feugiat volutpat. Sed in sodales odio.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ),
+            SizedBox(height: 10.0),
             ElevatedButton(
               onPressed: () {},
               child: Text('Edit Profile'),
