@@ -79,14 +79,27 @@ class Profile extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EditProfilePage()),
-                );
-              },
-              child: Text('Edit Profile'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditProfilePage()),
+                    );
+                  },
+                  child: Text('Edit Profile'),
+                ),
+                SizedBox(width: 10.0),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  },
+                  child: Text('Logout'),
+                ),
+              ],
             ),
           ],
         ),
