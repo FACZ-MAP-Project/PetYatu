@@ -8,8 +8,60 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _appBar(), body: const Center(child: Text('Profile')));
+      appBar: _appBar(),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const CircleAvatar(
+              radius: 50.0,
+              backgroundImage: NetworkImage(
+                  'https://www.w3schools.com/w3images/avatar2.png'),
+            ),
+            SizedBox(height: 10.0),
+            Text(
+              'John Doe',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Text(
+              'johndoe@gmail.com',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.grey[600],
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Text(
+              'Joined: January 2022',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.grey[600],
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Text(
+              'Loocation: Klang, Selangor, Maalysia',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.grey[600],
+              ),
+            ),
+            SizedBox(height: 10.0),
+            ElevatedButton(
+              onPressed: () {},
+              child: Text('Edit Profile'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
+
+  //make me user profile page ui
 
   AppBar _appBar() {
     return AppBar(
