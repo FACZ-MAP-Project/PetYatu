@@ -3,7 +3,7 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - develop # Set a branch name to trigger deployment
+      - develop
   pull_request:
 
 jobs:
@@ -15,24 +15,23 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true # Fetch Hugo themes (true OR recursive)
-          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
-        with:
-          hugo-version: "0.110.0"
+      - name: Setup Flutter
+        run: |
+          git clone https://github.com/flutter/flutter.git --depth 1 -b beta _flutter
+          echo "${GITHUB_WORKSPACE}/_flutter/bin" >> ${GITHUB_PATH}
+
+      - name: Install
+        run: |
+          flutter config --enable-web
+          flutter pub get
 
       - name: Build
-        run: hugo --minify
+        run: flutter build web
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        # If you're changing the branch from main,
-        # also change the `main` in `refs/heads/main`
-        # below accordingly.
         if: ${{ github.ref == 'refs/heads/develop' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: ./build/web
