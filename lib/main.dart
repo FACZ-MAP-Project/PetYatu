@@ -33,7 +33,7 @@ class MainApp extends StatelessWidget {
           ),
         ),
         title: 'PetYatu',
-        home: const RootApp(),
+        // home: const RootApp(),
         initialRoute: '/login',
         routes: {
           '/login': (context) => const LoginPage(),
