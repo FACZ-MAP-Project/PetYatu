@@ -7,6 +7,7 @@ class AppUser {
   String email;
   String password;
   String token;
+  bool isAdoptee;
 
   // Constructor
   AppUser({
@@ -15,6 +16,7 @@ class AppUser {
     required this.email,
     required this.password,
     required this.token,
+    this.isAdoptee = false,
   });
 
   // empty constructor
@@ -23,14 +25,16 @@ class AppUser {
         name = '',
         email = '',
         password = '',
-        token = '';
+        token = '',
+        isAdoptee = false;
 
   // Constructor with only uid
   AppUser.withId(this.uid)
       : name = '',
         email = '',
         password = '',
-        token = '';
+        token = '',
+        isAdoptee = false;
 
   // Methods
   // Convert JSON to User object
@@ -41,6 +45,7 @@ class AppUser {
       email: json['email'],
       password: json['password'],
       token: json['token'],
+      isAdoptee: json['isAdoptee'],
     );
   }
 
@@ -51,6 +56,7 @@ class AppUser {
         'email': email,
         'password': password,
         'token': token,
+        'isAdoptee': isAdoptee,
       };
 
   // Convert User object to Map
@@ -61,6 +67,7 @@ class AppUser {
       'email': email,
       'password': password,
       'token': token,
+      'isAdoptee': isAdoptee,
     };
   }
 
