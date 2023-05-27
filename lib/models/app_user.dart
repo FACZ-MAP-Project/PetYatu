@@ -1,5 +1,7 @@
 // User data model
 // Class
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AppUser {
   // Properties
   String uid;
@@ -49,6 +51,20 @@ class AppUser {
     );
   }
 
+  factory AppUser.fromDocumentSnapshot(DocumentSnapshot snapshot) {
+    Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    if (data == null) throw Exception('No data in snapshot');
+
+    return AppUser(
+      uid: snapshot['uid'],
+      name: snapshot['name'],
+      email: snapshot['email'],
+      password: snapshot['password'],
+      token: snapshot['token'],
+      isAdoptee: snapshot['isAdoptee'],
+    );
+  }
+
   // Convert User object to JSON
   Map<String, dynamic> toJson() => {
         'uid': uid,
@@ -82,24 +98,3 @@ class AppUser {
     );
   }
 }
-
-// // Methods
-//   // Convert JSON to User object
-//   factory User.fromJson(Map<String, dynamic> json) {
-//     return User(
-//       id: json['id'],
-//       name: json['name'],
-//       email: json['email'],
-//       password: json['password'],
-//       token: json['token'],
-//     );
-//   }
-
-//   // Convert User object to JSON
-//   Map<String, dynamic> toJson() => {
-//         'id': id,
-//         'name': name,
-//         'email': email,
-//         'password': password,
-//         'token': token,
-//       };
