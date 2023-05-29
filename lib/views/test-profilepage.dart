@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
+import '../models/app_user.dart';
 
 class Profile extends StatelessWidget {
   const Profile({
@@ -7,129 +10,134 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const CircleAvatar(
-              radius: 50.0,
-              backgroundImage: NetworkImage(
-                  'https://www.w3schools.com/w3images/avatar2.png'),
-            ),
-            const SizedBox(height: 10.0),
-            const Text(
-              'John Doe',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold,
+    return Consumer<UserProvider>(builder: (context, userProvider, child) {
+      AppUser? appUser =
+          userProvider.getUser("O7HVoeb5mGfQwQXaYUA29eRe6fD3") as AppUser?;
+
+      return Scaffold(
+        appBar: _appBar(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const CircleAvatar(
+                radius: 50.0,
+                backgroundImage: NetworkImage(
+                    'https://www.w3schools.com/w3images/avatar2.png'),
               ),
-            ),
-            const SizedBox(height: 10.0),
-            Text(
-              'johndoe@gmail.com',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.grey[600],
+              const SizedBox(height: 10.0),
+              Text(
+                '${appUser?.name}',
+                style: const TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 10.0),
-            Text(
-              'Joined: January 2022',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            Text(
-              'Loocation: Klang, Selangor, Maalysia',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            Text(
-              'Profile: 22, Male',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            const Text(
-              'Bio:',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 5.0),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in massa neque. Nulla commodo nulla quis facilisis bibendum. Morbi eget diam vitae ex rhoncus tincidunt. Mauris posuere risus vel enim dapibus, nec sollicitudin metus elementum. Duis sit amet est nec velit feugiat volutpat. Sed in sodales odio.',
-                textAlign: TextAlign.center,
+              const SizedBox(height: 10.0),
+              Text(
+                'j: ${appUser?.email}',
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 18.0,
                   color: Colors.grey[600],
                 ),
               ),
-            ),
-            const SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const EditProfilePage()),
-                    );
-                  },
-                  child: const Text('Edit Profile'),
+              const SizedBox(height: 10.0),
+              Text(
+                'Joined: January 2022',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.grey[600],
                 ),
-                const SizedBox(width: 10.0),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/login');
-                  },
-                  child: const Text('Logout'),
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                'Loocation: Klang, Selangor, Maalysia',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.grey[600],
                 ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  //make me user profile page ui
-
-  AppBar _appBar() {
-    return AppBar(
-      centerTitle: true,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('lib/assets/images/logo.png',
-                fit: BoxFit.contain, height: 32),
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                'Profile: 22, Male',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 10.0),
+              const Text(
+                'Bio:',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(
+                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in massa neque. Nulla commodo nulla quis facilisis bibendum. Morbi eget diam vitae ex rhoncus tincidunt. Mauris posuere risus vel enim dapibus, nec sollicitudin metus elementum. Duis sit amet est nec velit feugiat volutpat. Sed in sodales odio.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EditProfilePage()),
+                      );
+                    },
+                    child: const Text('Edit Profile'),
+                  ),
+                  const SizedBox(width: 10.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/login');
+                    },
+                    child: const Text('Logout'),
+                  ),
+                ],
+              ),
+            ],
           ),
-          const Text('PetYatu',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 32,
-              )),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
+}
+
+//make me user profile page ui
+
+AppBar _appBar() {
+  return AppBar(
+    centerTitle: true,
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('lib/assets/images/logo.png',
+              fit: BoxFit.contain, height: 32),
+        ),
+        const Text('PetYatu',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 32,
+            )),
+      ],
+    ),
+  );
 }
 
 class EditProfilePage extends StatefulWidget {
