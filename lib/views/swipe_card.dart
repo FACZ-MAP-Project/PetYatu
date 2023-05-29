@@ -1,18 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:petyatu/models/pet.dart';
+import 'package:petyatu/providers/pet_provider.dart';
 import 'package:petyatu/views/profile_cat_page.dart';
+import 'package:provider/provider.dart';
 
 class SwipeCard extends StatefulWidget {
-  final List<String> photoUrls;
-  final List<String> names;
-  final List<String> descriptions;
-
-  const SwipeCard(
-      {super.key,
-      required this.photoUrls,
-      required this.names,
-      required this.descriptions});
+  const SwipeCard({
+    super.key,
+  });
 
   @override
   SwipeCardState createState() => SwipeCardState();
@@ -22,10 +19,6 @@ class SwipeCardState extends State<SwipeCard>
     with SingleTickerProviderStateMixin {
   late SwiperController _swiperController;
   late AnimationController _animationController;
-
-  List<bool> likedItems = List.generate(17, (index) => false);
-  List<int> totalLikes = List.generate(17, (index) => Random().nextInt(50) + 1);
-  List<bool> star = List.generate(17, (index) => false);
 
   @override
   void initState() {
@@ -47,29 +40,62 @@ class SwipeCardState extends State<SwipeCard>
 
   @override
   Widget build(BuildContext context) {
-    return Swiper(
-      controller: _swiperController,
-      itemCount: widget.photoUrls.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _itemBuilder(index);
+    final PetProvider _petProvider =
+        Provider.of<PetProvider>(context, listen: true);
+    return FutureBuilder<List<Pet>>(
+      future: _petProvider.getPetsForAdoption(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Something went wrong: ${snapshot.error}'),
+          );
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          final List<Pet> _pets = snapshot.data!;
+
+          if (_pets.isEmpty) {
+            return const Center(
+              child: Text('No pets found'),
+            );
+          } else {
+            return Swiper(
+              controller: _swiperController,
+              itemCount: _pets.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _itemBuilder(_pets[index]);
+              },
+              loop: true,
+              layout: SwiperLayout.TINDER,
+              itemWidth: MediaQuery.of(context).size.width,
+              itemHeight: MediaQuery.of(context).size.height,
+            );
+          }
+        }
+
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       },
-      loop: true,
-      layout: SwiperLayout.TINDER,
-      itemWidth: MediaQuery.of(context).size.width,
-      itemHeight: MediaQuery.of(context).size.height,
     );
   }
 
-  Stack _itemBuilder(int index) {
+  Stack _itemBuilder(Pet pet) {
     return Stack(
       children: [
-        _imageBox(index),
-        _imageDetail(index),
+        _imageBox(pet),
+        _imageDetail(pet),
       ],
     );
   }
 
-  Positioned _imageDetail(int index) {
+  Positioned _imageDetail(Pet pet) {
     return Positioned(
       left: 0,
       bottom: 0,
@@ -92,17 +118,17 @@ class SwipeCardState extends State<SwipeCard>
             ],
           ),
         ),
-        child: _detail(index),
+        child: _detail(pet),
       ),
     );
   }
 
-  Column _detail(int index) {
+  Column _detail(Pet pet) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.names[index],
+          pet.name,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 50.0,
@@ -114,9 +140,8 @@ class SwipeCardState extends State<SwipeCard>
           children: [
             ElevatedButton.icon(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const Profile();
-                }));
+                Navigator.of(context)
+                    .pushNamed("/adopt-me", arguments: pet.uid);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
@@ -147,17 +172,18 @@ class SwipeCardState extends State<SwipeCard>
             ElevatedButton.icon(
               onPressed: () {
                 setState(() {
-                  if (!likedItems[index]) {
-                    totalLikes[index]++;
-                  } else {
-                    totalLikes[index]--;
-                  }
-                  likedItems[index] = !likedItems[index];
+                  // if (!likedItems[index]) {
+                  //   totalLikes[index]++;
+                  // } else {
+                  //   totalLikes[index]--;
+                  // }
+                  // likedItems[index] = !likedItems[index];
                 });
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
-                  likedItems[index] ? Colors.pink : Colors.grey,
+                  // likedItems[index] ? Colors.pink : Colors.grey,
+                  Colors.pink,
                 ),
                 overlayColor: MaterialStateProperty.all(
                   Colors.white.withOpacity(0.3),
@@ -169,11 +195,12 @@ class SwipeCardState extends State<SwipeCard>
                 ),
               ),
               icon: Icon(
-                likedItems[index] ? Icons.favorite : Icons.favorite_border,
+                // likedItems[index] ? Icons.favorite : Icons.favorite_border,
+                Icons.favorite,
                 color: Colors.white,
               ),
               label: Text(
-                totalLikes[index].toString(),
+                pet.likes.toString(),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -184,18 +211,20 @@ class SwipeCardState extends State<SwipeCard>
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
-                color: star[index] ? Colors.yellow : Colors.grey,
+                //color: star[index] ? Colors.yellow : Colors.grey,
+                color: Colors.yellow,
               ),
               child: GestureDetector(
                 onTap: () {
                   setState(() {
-                    star[index] = !star[index];
+                    //star[index] = !star[index];
                   });
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: Icon(
-                    star[index] ? Icons.star : Icons.star_border,
+                    //star[index] ? Icons.star : Icons.star_border,
+                    Icons.star,
                     color: Colors.white,
                   ),
                 ),
@@ -205,7 +234,7 @@ class SwipeCardState extends State<SwipeCard>
         ),
         const SizedBox(height: 10.0),
         Text(
-          widget.descriptions[index],
+          pet.bio ?? "",
           style: const TextStyle(
             color: Colors.white,
             fontSize: 14.0,
@@ -215,7 +244,7 @@ class SwipeCardState extends State<SwipeCard>
     );
   }
 
-  Container _imageBox(int index) {
+  Container _imageBox(Pet pet) {
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -230,7 +259,7 @@ class SwipeCardState extends State<SwipeCard>
           ),
         ],
         image: DecorationImage(
-          image: NetworkImage(widget.photoUrls[index]),
+          image: NetworkImage(pet.image ?? ""),
           fit: BoxFit.cover,
         ),
       ),

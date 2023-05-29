@@ -38,6 +38,7 @@ class UserProvider with ChangeNotifier {
           .collection('users')
           .doc(updatedUser.uid)
           .update(updatedUser.toMap());
+      notifyListeners();
     } catch (e) {
       rethrow;
     }

@@ -15,6 +15,8 @@ class Pet {
   DateTime? datePosted;
   String? bio;
   bool? isOpenForAdoption;
+  int? likes;
+  List<String>? likedBy;
 
   Pet({
     required this.uid,
@@ -29,6 +31,8 @@ class Pet {
     required this.datePosted,
     required this.bio,
     required this.isOpenForAdoption,
+    required this.likes,
+    required this.likedBy,
   });
 
   // empty constructor
@@ -44,12 +48,19 @@ class Pet {
         location = '',
         datePosted = null,
         bio = '',
-        isOpenForAdoption = false;
+        isOpenForAdoption = false,
+        likes = 0,
+        likedBy = [];
 
   factory Pet.fromJson(Map<String, dynamic> json) {
     List<dynamic> galleryJson = json['gallery'];
     List<String>? gallery = galleryJson != null
         ? galleryJson.map((item) => item.toString()).toList()
+        : null;
+
+    List<dynamic> likedByJson = json['likedBy'];
+    List<String>? likedBy = likedByJson != null
+        ? likedByJson.map((item) => item.toString()).toList()
         : null;
 
     return Pet(
@@ -65,6 +76,8 @@ class Pet {
       datePosted: json['datePosted'].toDate(),
       bio: json['bio'],
       isOpenForAdoption: json['isOpenForAdoption'],
+      likes: json['likes'],
+      likedBy: likedBy,
     );
   }
 
@@ -78,8 +91,11 @@ class Pet {
         'owner': owner,
         'location': location,
         'datePosted': datePosted,
+        'contact': contact,
         'bio': bio,
         'isOpenForAdoption': isOpenForAdoption,
+        'likes': likes,
+        'likedBy': likedBy,
       };
 
   @override

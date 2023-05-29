@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:petyatu/views/profile_cat_page.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
@@ -8,6 +9,7 @@ import 'providers/pet_provider.dart';
 
 import 'package:petyatu/views/root_app.dart';
 import 'package:petyatu/views/login_page.dart';
+import 'views/Manage Pets/view_pet.dart';
 import 'views/register_page.dart';
 import 'views/forget_page.dart';
 import 'views/Manage Pets/add_pet.dart';
@@ -47,7 +49,6 @@ class MainApp extends StatelessWidget {
           ),
         ),
         title: 'PetYatu',
-        home: const RootApp(),
         initialRoute: '/login',
         routes: {
           '/login': (context) => const LoginPage(),
@@ -56,6 +57,8 @@ class MainApp extends StatelessWidget {
           '/manage-pets': (context) => const ManagePets(),
           '/register': (context) => const RegisterPage(),
           '/forget-password': (context) => const ForgetPasswordPage(),
+          '/view-pet': (context) => const ViewPet(),
+          '/adopt-me': (context) => const Profile()
         },
       ),
     );
