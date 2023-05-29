@@ -39,7 +39,7 @@ class PetStoreDetailsPage extends StatelessWidget {
                   _buildOpeningHours('Tuesday', '9:00 AM - 6:00 PM'),
                   _buildOpeningHours('Wednesday', '9:00 AM - 6:00 PM'),
                   _buildOpeningHours('Thursday', '9:00 AM - 6:00 PM'),
-                  _buildOpeningHours('Friday', '9:00 AM - 7:00 PM'),
+                  _buildOpeningHours('Friday', '9:00 AM - 7:30 PM'),
                   _buildOpeningHours('Saturday', '10:00 AM - 4:00 PM'),
                   _buildOpeningHours('Sunday', 'Closed'),
                 ],
