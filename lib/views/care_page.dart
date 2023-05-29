@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
+import 'veterinarystores_page.dart';
 
 class Care extends StatelessWidget {
   const Care({Key? key}) : super(key: key);
@@ -39,7 +40,9 @@ class Care extends StatelessWidget {
     );
   }
 
-  Widget careView(context) {
+
+  Widget careView(BuildContext context) {
+
     return ListView(
       padding: const EdgeInsets.all(8),
       children: [
@@ -100,6 +103,33 @@ class Care extends StatelessWidget {
                 const ListTile(
                   title: Text('Pet Adoption'),
                   subtitle: Text('This is the section for pet adoption'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Search()),
+            );
+          },
+          child: Card(
+            color: Colors.yellow, // set color here
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 150, // set fixed height for image container
+                  width: double.infinity, // set width to fill available space
+                  child: Image.network(
+                    'https://picsum.photos/id/1019/600/300',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const ListTile(
+                  title: Text('Veterinary Stores'),
+                  subtitle: Text('This is the section for Veterinary Stores'),
                 ),
               ],
             ),
