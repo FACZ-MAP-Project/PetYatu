@@ -12,6 +12,7 @@ import 'views/register_page.dart';
 import 'views/forget_page.dart';
 import 'views/Manage Pets/add_pet.dart';
 import 'views/Manage Pets/manage_pets.dart';
+import 'views/Pet Care/care_guide.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +57,7 @@ class MainApp extends StatelessWidget {
           '/manage-pets': (context) => const ManagePets(),
           '/register': (context) => const RegisterPage(),
           '/forget-password': (context) => const ForgetPasswordPage(),
+          '/pet-care': (context) => const Care(),
         },
       ),
     );

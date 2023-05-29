@@ -70,7 +70,7 @@ class Care extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed('/');
+            Navigator.of(context).pushNamed('/pet-care');
           },
           child: Card(
             color: Colors.green, // set color here
