@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'package:provider/provider.dart';
+import 'providers/auth_provider.dart';
 
 import 'package:petyatu/views/root_app.dart';
 import 'package:petyatu/views/login_page.dart';
 import 'views/register_page.dart';
-import 'providers/auth_provider.dart';
 import 'views/forget_page.dart';
 
 Future<void> main() async {
@@ -33,7 +34,7 @@ class MainApp extends StatelessWidget {
           ),
         ),
         title: 'PetYatu',
-        // home: const RootApp(),
+        home: const RootApp(),
         initialRoute: '/login',
         routes: {
           '/login': (context) => const LoginPage(),
