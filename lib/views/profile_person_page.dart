@@ -119,6 +119,12 @@ class Profile extends StatelessWidget {
                             child: const Text('Edit Profile'),
                           ),
                           const SizedBox(height: 10.0),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/login');
+                            },
+                            child: const Text('LogOut'),
+                          ),
                         ],
                       ),
                     ),

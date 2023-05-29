@@ -140,6 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ElevatedButton(
               onPressed: () {
                 saveUpdatedUserProfile();
+                Navigator.pop(context);
               },
               child: const Text('Save Changes'),
             ),
