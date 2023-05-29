@@ -18,12 +18,13 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   void _registerUser(AuthProvider authProvider) async {
-    AppUser user = AppUser(
+    AppUser user = AppUser.register(
       uid: '',
       name: _nameController.text,
       email: _emailController.text,
       password: _passwordController.text,
       token: '',
+      dateJoined: DateTime.now(),
     );
 
     try {

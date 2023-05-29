@@ -39,6 +39,7 @@ class AuthProvider with ChangeNotifier {
             'email': appUser.email,
             'password': appUser.password,
             'token': appUser.token,
+            'dateJoined': appUser.dateJoined,
           },
         );
       }

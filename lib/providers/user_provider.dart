@@ -12,7 +12,20 @@ class UserProvider with ChangeNotifier {
     try {
       DocumentSnapshot documentSnapshot =
           await _firestore.collection('users').doc(uid).get();
+
       return AppUser.fromDocumentSnapshot(documentSnapshot);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // gwt uaer data from firestore in form of json and convert to AppUser
+  Future<AppUser?> getUserFromJson(String uid) async {
+    try {
+      DocumentSnapshot documentSnapshot =
+          await _firestore.collection('users').doc(uid).get();
+
+      return AppUser.fromJson(documentSnapshot.data()! as Map<String, dynamic>);
     } catch (e) {
       rethrow;
     }
