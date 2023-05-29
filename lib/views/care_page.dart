@@ -40,9 +40,7 @@ class Care extends StatelessWidget {
     );
   }
 
-
   Widget careView(BuildContext context) {
-
     return ListView(
       padding: const EdgeInsets.all(8),
       children: [
@@ -101,8 +99,8 @@ class Care extends StatelessWidget {
                   ),
                 ),
                 const ListTile(
-                  title: Text('Pet Adoption'),
-                  subtitle: Text('This is the section for pet adoption'),
+                  title: Text('Manage Pets'),
+                  subtitle: Text('This is the section for managing your pets'),
                 ),
               ],
             ),
