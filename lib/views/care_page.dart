@@ -8,7 +8,7 @@ class Care extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
-      body: careView(),
+      body: careView(context),
     );
   }
 
@@ -39,7 +39,7 @@ class Care extends StatelessWidget {
     );
   }
 
-  Widget careView() {
+  Widget careView(context) {
     return ListView(
       padding: const EdgeInsets.all(8),
       children: [
@@ -81,23 +81,28 @@ class Care extends StatelessWidget {
             ],
           ),
         ),
-        Card(
-          color: Colors.orange, // set color here
-          child: Column(
-            children: [
-              SizedBox(
-                height: 150, // set fixed height for image container
-                width: double.infinity, // set width to fill available space
-                child: Image.network(
-                  'https://picsum.photos/id/1023/600/400',
-                  fit: BoxFit.cover,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/manage-pets');
+          },
+          child: Card(
+            color: Colors.orange, // set color here
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 150, // set fixed height for image container
+                  width: double.infinity, // set width to fill available space
+                  child: Image.network(
+                    'https://picsum.photos/id/1023/600/400',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              const ListTile(
-                title: Text('Pet Adoption'),
-                subtitle: Text('This is the section for pet adoption'),
-              ),
-            ],
+                const ListTile(
+                  title: Text('Pet Adoption'),
+                  subtitle: Text('This is the section for pet adoption'),
+                ),
+              ],
+            ),
           ),
         ),
       ],
