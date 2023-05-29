@@ -1,15 +1,20 @@
+// import dart convert
+import 'dart:convert';
+
 // Pet data model
 class Pet {
   String uid;
   String name;
-  int age;
+  int? age;
   String? type;
   String? image;
   List<String>? gallery;
-  String owner;
-  String location;
+  String? owner;
+  String? contact;
+  String? location;
   DateTime? datePosted;
-  String bio;
+  String? bio;
+  bool? isOpenForAdoption;
 
   Pet({
     required this.uid,
@@ -19,9 +24,11 @@ class Pet {
     required this.age,
     required this.gallery,
     required this.owner,
+    required this.contact,
     required this.location,
     required this.datePosted,
     required this.bio,
+    required this.isOpenForAdoption,
   });
 
   // empty constructor
@@ -33,22 +40,31 @@ class Pet {
         age = 0,
         gallery = [],
         owner = '',
+        contact = '',
         location = '',
         datePosted = null,
-        bio = '';
+        bio = '',
+        isOpenForAdoption = false;
 
   factory Pet.fromJson(Map<String, dynamic> json) {
+    List<dynamic> galleryJson = json['gallery'];
+    List<String>? gallery = galleryJson != null
+        ? galleryJson.map((item) => item.toString()).toList()
+        : null;
+
     return Pet(
       uid: json['uid'],
       name: json['name'],
       type: json['type'],
       image: json['image'],
       age: json['age'],
-      gallery: json['gallery'],
+      gallery: gallery,
       owner: json['owner'],
+      contact: json['contact'],
       location: json['location'],
       datePosted: json['datePosted'].toDate(),
       bio: json['bio'],
+      isOpenForAdoption: json['isOpenForAdoption'],
     );
   }
 
@@ -57,6 +73,13 @@ class Pet {
         'name': name,
         'type': type,
         'image': image,
+        'age': age,
+        'gallery': gallery,
+        'owner': owner,
+        'location': location,
+        'datePosted': datePosted,
+        'bio': bio,
+        'isOpenForAdoption': isOpenForAdoption,
       };
 
   @override

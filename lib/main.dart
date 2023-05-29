@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/user_provider.dart';
+import 'providers/pet_provider.dart';
 
 import 'package:petyatu/views/root_app.dart';
 import 'package:petyatu/views/login_page.dart';
 import 'views/register_page.dart';
 import 'views/forget_page.dart';
+import 'views/Manage Pets/add_pet.dart';
+import 'views/Manage Pets/manage_pets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +34,9 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider<UserProvider>(
           create: (_) => UserProvider(),
         ),
+        ChangeNotifierProvider<PetProvider>(
+          create: (_) => PetProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -47,6 +52,8 @@ class MainApp extends StatelessWidget {
         routes: {
           '/login': (context) => const LoginPage(),
           '/root': (context) => const RootApp(),
+          '/add-pet': (context) => const AddPet(),
+          '/manage-pets': (context) => const ManagePets(),
           '/register': (context) => const RegisterPage(),
           '/forget-password': (context) => const ForgetPasswordPage(),
         },
