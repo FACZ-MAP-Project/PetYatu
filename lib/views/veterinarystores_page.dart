@@ -25,7 +25,7 @@ class Search extends StatelessWidget {
                 'lib/assets/images/logo.png',
                 fit: BoxFit.contain,
                 height: 32,
-                alignment: Alignment.topRight,
+                alignment: Alignment.center,
               ),
             ),
           ),
@@ -41,15 +41,6 @@ class Search extends StatelessWidget {
           ),
         ],
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search),
-          onPressed: () {
-            // Handle search button pressed
-            // Perform search operation
-          },
-        ),
-      ],
     );
   }
 
@@ -62,7 +53,8 @@ class Search extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PetStoreDetailsPage()),
+              MaterialPageRoute(
+                  builder: (context) => const PetStoreDetailsPage()),
             );
           },
           child: Card(
@@ -130,7 +122,8 @@ class Search extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PetStoreDetailsPage()),
+              MaterialPageRoute(
+                  builder: (context) => const PetStoreDetailsPage()),
             );
           },
           child: Card(
