@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login(AuthProvider authProvider) async {
-    AppUser user = AppUser(
+    AppUser user = AppUser.login(
       uid: '',
       name: '',
       email: _emailController.text,
