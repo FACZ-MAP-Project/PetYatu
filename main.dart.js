@@ -90275,7 +90275,7 @@ A.aeX.prototype={
 $0(){this.a.pv("sms:"+A.i(this.b.w))},
 $S:0}
 A.aeY.prototype={
-$0(){this.a.pv("https://wa.me/"+A.i(this.b.w))},
+$0(){this.a.pv("whatsapp://send?phone="+A.i(this.b.w))},
 $S:0}
 A.aeZ.prototype={
 $0(){this.a.pv("tel:"+A.i(this.b.w))},
