@@ -104,7 +104,8 @@ class Profile extends StatelessWidget {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                _launchURL('https://wa.me/${pet.contact}');
+                                _launchURL(
+                                    'whatsapp://send?phone=${pet.contact}');
                               },
                               child: const Text('WhatsApp'),
                             ),
