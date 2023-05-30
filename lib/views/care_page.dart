@@ -44,42 +44,52 @@ class Care extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(8),
       children: [
-        Card(
-          color: Colors.blue, // set color here
-          child: Column(
-            children: [
-              SizedBox(
-                height: 150, // set fixed height for image container
-                width: double.infinity, // set width to fill available space
-                child: Image.network(
-                  'https://picsum.photos/id/1025/600/400',
-                  fit: BoxFit.cover,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/');
+          },
+          child: Card(
+            color: Colors.orange, // set color here
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 150, // set fixed height for image container
+                  width: double.infinity, // set width to fill available space
+                  child: Image.network(
+                    'https://picsum.photos/id/1026/600/400',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              const ListTile(
-                title: Text('Pet Care'),
-                subtitle: Text('This is the section for pet care'),
-              ),
-            ],
+                const ListTile(
+                  title: Text('First Aid'),
+                  subtitle: Text('This is the section for first aid'),
+                ),
+              ],
+            ),
           ),
         ),
-        Card(
-          color: Colors.green, // set color here
-          child: Column(
-            children: [
-              SizedBox(
-                height: 150, // set fixed height for image container
-                width: double.infinity, // set width to fill available space
-                child: Image.network(
-                  'https://picsum.photos/id/1019/600/400',
-                  fit: BoxFit.cover,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/pet-care');
+          },
+          child: Card(
+            color: Colors.green, // set color here
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 150, // set fixed height for image container
+                  width: double.infinity, // set width to fill available space
+                  child: Image.network(
+                    'https://picsum.photos/id/1028/600/400',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              const ListTile(
-                title: Text('First Aid'),
-                subtitle: Text('This is the section for first aid'),
-              ),
-            ],
+                const ListTile(
+                  title: Text('Pet Care'),
+                  subtitle: Text('This is the section for pet care'),
+                ),
+              ],
+            ),
           ),
         ),
         GestureDetector(
@@ -87,7 +97,7 @@ class Care extends StatelessWidget {
             Navigator.of(context).pushNamed('/manage-pets');
           },
           child: Card(
-            color: Colors.orange, // set color here
+            color: Colors.blue, // set color here
             child: Column(
               children: [
                 SizedBox(
@@ -100,7 +110,8 @@ class Care extends StatelessWidget {
                 ),
                 const ListTile(
                   title: Text('Manage Pets'),
-                  subtitle: Text('This is the section for managing your pets'),
+                  subtitle: Text(
+                      'This is the section for managing your pets and cat'),
                 ),
               ],
             ),
@@ -110,7 +121,7 @@ class Care extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Search()),
+              MaterialPageRoute(builder: (context) => const Search()),
             );
           },
           child: Card(
