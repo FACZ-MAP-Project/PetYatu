@@ -57,9 +57,9 @@ class MainApp extends StatelessWidget {
           '/add-pet': (context) => const AddPet(),
           '/manage-pets': (context) => const ManagePets(),
           '/register': (context) => const RegisterPage(),
-          '/forget-password': (context) => const F
+          '/forget-password': (context) => const ForgetPasswordPage(),
           '/view-pet': (context) => const ViewPet(),
-          '/adopt-me': (context) => cons
+          '/adopt-me': (context) => const Profile(),
           '/pet-care': (context) => const Care(),
         },
       ),
