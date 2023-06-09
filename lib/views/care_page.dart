@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
+import 'veterinarystores_page.dart';
 
 class Care extends StatelessWidget {
   const Care({Key? key}) : super(key: key);
@@ -8,7 +9,7 @@ class Care extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
-      body: careView(),
+      body: careView(context),
     );
   }
 
@@ -39,65 +40,108 @@ class Care extends StatelessWidget {
     );
   }
 
-  Widget careView() {
+  Widget careView(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(8),
       children: [
-        Card(
-          color: Colors.blue, // set color here
-          child: Column(
-            children: [
-              SizedBox(
-                height: 150, // set fixed height for image container
-                width: double.infinity, // set width to fill available space
-                child: Image.network(
-                  'https://picsum.photos/id/1025/600/400',
-                  fit: BoxFit.cover,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/');
+          },
+          child: Card(
+            color: Colors.orange, // set color here
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 150, // set fixed height for image container
+                  width: double.infinity, // set width to fill available space
+                  child: Image.network(
+                    'https://picsum.photos/id/1026/600/400',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              const ListTile(
-                title: Text('Pet Care'),
-                subtitle: Text('This is the section for pet care'),
-              ),
-            ],
+                const ListTile(
+                  title: Text('First Aid'),
+                  subtitle: Text('This is the section for first aid'),
+                ),
+              ],
+            ),
           ),
         ),
-        Card(
-          color: Colors.green, // set color here
-          child: Column(
-            children: [
-              SizedBox(
-                height: 150, // set fixed height for image container
-                width: double.infinity, // set width to fill available space
-                child: Image.network(
-                  'https://picsum.photos/id/1019/600/400',
-                  fit: BoxFit.cover,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/pet-care');
+          },
+          child: Card(
+            color: Colors.green, // set color here
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 150, // set fixed height for image container
+                  width: double.infinity, // set width to fill available space
+                  child: Image.network(
+                    'https://picsum.photos/id/1028/600/400',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              const ListTile(
-                title: Text('First Aid'),
-                subtitle: Text('This is the section for first aid'),
-              ),
-            ],
+                const ListTile(
+                  title: Text('Pet Care'),
+                  subtitle: Text('This is the section for pet care'),
+                ),
+              ],
+            ),
           ),
         ),
-        Card(
-          color: Colors.orange, // set color here
-          child: Column(
-            children: [
-              SizedBox(
-                height: 150, // set fixed height for image container
-                width: double.infinity, // set width to fill available space
-                child: Image.network(
-                  'https://picsum.photos/id/1023/600/400',
-                  fit: BoxFit.cover,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/manage-pets');
+          },
+          child: Card(
+            color: Colors.blue, // set color here
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 150, // set fixed height for image container
+                  width: double.infinity, // set width to fill available space
+                  child: Image.network(
+                    'https://picsum.photos/id/1023/600/400',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              const ListTile(
-                title: Text('Pet Adoption'),
-                subtitle: Text('This is the section for pet adoption'),
-              ),
-            ],
+                const ListTile(
+                  title: Text('Manage Pets'),
+                  subtitle: Text(
+                      'This is the section for managing your pets and cat'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Search()),
+            );
+          },
+          child: Card(
+            color: Colors.yellow, // set color here
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 150, // set fixed height for image container
+                  width: double.infinity, // set width to fill available space
+                  child: Image.network(
+                    'https://picsum.photos/id/1019/600/300',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const ListTile(
+                  title: Text('Veterinary Stores'),
+                  subtitle: Text('This is the section for Veterinary Stores'),
+                ),
+              ],
+            ),
           ),
         ),
       ],
