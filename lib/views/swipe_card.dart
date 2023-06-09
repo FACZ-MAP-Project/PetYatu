@@ -308,7 +308,8 @@ class SwipeCardState extends State<SwipeCard>
 
     await Share.shareXFiles(
       [XFile(tempPath)],
-      text: "Check out this pet: ${pet.name}!",
+      text: "I found ${pet.name}!\n"
+          "Check out more pets at https://facz-map-project.github.io/PetYatu/",
       subject: "Look at this pet!",
     );
 
