@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../models/pet_article.dart';
 
 class Care extends StatelessWidget {
   const Care({Key? key}) : super(key: key);
@@ -8,7 +9,7 @@ class Care extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
-      body: careView(context),
+      body: _buildCareView(context),
     );
   }
 
@@ -17,16 +18,8 @@ class Care extends StatelessWidget {
       centerTitle: true,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              'lib/assets/images/logo.png',
-              fit: BoxFit.contain,
-              height: 32,
-            ),
-          ),
-          const Text(
+        children: const [
+          Text(
             'PetYatu',
             style: TextStyle(
               color: Colors.black,
@@ -39,7 +32,7 @@ class Care extends StatelessWidget {
     );
   }
 
-  Widget careView(BuildContext context) {
+  Widget _buildCareView(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(8),
       children: [
@@ -48,13 +41,15 @@ class Care extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ArticlePage(
-                  title: 'Pet Grooming',
-                  content:
-                      'Grooming pets is an important part of animal care. Most animals can be taught to enjoy grooming at any age. Regular pet grooming will help you build and maintain healthy relationships with your pets, and practice gentle leadership skills. Another benefit of grooming is that you may notice a physical change that needs medical attention, something that might not have been obvious if you hadn’t been grooming your pet. If you find any lumps, bumps or soreness, schedule an appointment with your veterinarian for a checkup.',
-                  imageUrl: 'https://picsum.photos/id/1020/600/400',
-                  url:
-                      'https://resources.bestfriends.org/article/pet-grooming-tips',
+                builder: (context) => ArticlePage(
+                  article: Article(
+                    title: 'Pet Grooming',
+                    content:
+                        'Grooming pets is an important part of animal care. Most animals can be taught to enjoy grooming at any age. Regular pet grooming will help you build and maintain healthy relationships with your pets, and practice gentle leadership skills. Another benefit of grooming is that you may notice a physical change that needs medical attention, something that might not have been obvious if you hadn’t been grooming your pet. If you find any lumps, bumps or soreness, schedule an appointment with your veterinarian for a checkup.',
+                    imageUrl: 'https://picsum.photos/id/1020/600/400',
+                    url:
+                        'https://resources.bestfriends.org/article/pet-grooming-tips',
+                  ),
                 ),
               ),
             );
@@ -72,7 +67,7 @@ class Care extends StatelessWidget {
                   ),
                 ),
                 const ListTile(
-                  title: Text('Pet Grooming'),
+                  title: Text('Pet Groomingg'),
                   subtitle: Text('This is the section for pet grooming'),
                 ),
               ],
@@ -85,24 +80,15 @@ class Care extends StatelessWidget {
 }
 
 class ArticlePage extends StatelessWidget {
-  final String title;
-  final String content;
-  final String imageUrl;
-  final String url;
+  final Article article;
 
-  const ArticlePage({
-    required this.title,
-    required this.content,
-    required this.imageUrl,
-    required this.url,
-    Key? key,
-  }) : super(key: key);
+  const ArticlePage({required this.article, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(article.title),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -112,20 +98,20 @@ class ArticlePage extends StatelessWidget {
               height: 200,
               width: double.infinity,
               child: Image.network(
-                imageUrl,
+                article.imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                content,
+                article.content,
                 style: const TextStyle(fontSize: 18),
               ),
             ),
             GestureDetector(
               onTap: () {
-                launchURL(url);
+                launchURL(article.url);
               },
               child: Container(
                 width: double.infinity,
@@ -157,9 +143,7 @@ class ArticlePage extends StatelessWidget {
   }
 
   void launchURL(String url) async {
-    // ignore: deprecated_member_use
     if (await canLaunch(url)) {
-      // ignore: deprecated_member_use
       await launch(url);
     } else {
       throw 'Could not launch $url';
