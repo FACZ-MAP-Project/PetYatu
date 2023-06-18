@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       initialIndex: 1,
       child: Scaffold(appBar: appBar(), body: barView()),
     );
@@ -46,9 +46,6 @@ class _HomePageState extends State<HomePage> {
           Tab(
             text: 'Nearby',
           ),
-          Tab(
-            text: 'Favorites',
-          ),
         ],
       ),
     );
@@ -60,7 +57,6 @@ class _HomePageState extends State<HomePage> {
       children: [
         CatMoment(),
         SwipeCard(),
-        Favorites(),
       ],
     );
   }
