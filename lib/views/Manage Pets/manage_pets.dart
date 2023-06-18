@@ -15,7 +15,7 @@ class _ManagePetsState extends State<ManagePets> {
   @override
   Widget build(BuildContext context) {
     final PetProvider _petProvider =
-        Provider.of<PetProvider>(context, listen: false);
+        Provider.of<PetProvider>(context, listen: true);
 
     return Scaffold(
         appBar: AppBar(
@@ -48,7 +48,7 @@ class _ManagePetsState extends State<ManagePets> {
 
   Widget _allPetsWidget() {
     final PetProvider _petProvider =
-        Provider.of<PetProvider>(context, listen: false);
+        Provider.of<PetProvider>(context, listen: true);
 
     return FutureBuilder<List<Pet>>(
       future: _petProvider.viewMyPets(),
@@ -78,13 +78,8 @@ class _ManagePetsState extends State<ManagePets> {
                     subtitle: InkWell(
                       onTap: () {
                         // ViewPet
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ViewPet(
-                              pet: _pets[index],
-                            ),
-                          ),
-                        );
+                        Navigator.of(context).pushNamed('/view-pet',
+                            arguments: _pets[index].uid);
                       },
                       child: const Text(
                         'View Details',

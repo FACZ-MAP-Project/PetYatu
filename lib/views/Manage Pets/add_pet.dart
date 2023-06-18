@@ -37,6 +37,8 @@ class _AddPetState extends State<AddPet> {
       datePosted: DateTime.now(),
       bio: _descriptionController.text,
       isOpenForAdoption: _isOpenForAdoption,
+      likes: 0,
+      likedBy: [],
     );
 
     try {
