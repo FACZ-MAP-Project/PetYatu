@@ -13,4 +13,22 @@ class Article {
     required this.imageUrl,
     required this.url,
   });
+
+  factory Article.fromJson(Map<String, dynamic> json) {
+    return Article(
+      title: json['title'],
+      content: json['content'],
+      imageUrl: json['imageUrl'],
+      url: json['url'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'content': content,
+      'imageUrl': imageUrl,
+      'url': url,
+    };
+  }
 }

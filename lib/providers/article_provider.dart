@@ -1,29 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../models/pet_article.dart';
 
-class ArticleProvider extends ChangeNotifier {
-  List<Article> _articles = [];
+class ArticleProvider with ChangeNotifier {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  List<Article> get articles => _articles;
+//get data from firestore
+  Future<List<Article>> getArticles() async {
+    List<Article> articles = [];
+    try {
+      await _firestore.collection('articles').get().then((querySnapshot) {
+        for (var element in querySnapshot.docs) {
+          articles.add(Article.fromJson(element.data()));
+        }
+      });
+      return articles;
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-  Future<void> fetchArticles() async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('articles').get();
-    final articles = snapshot.docs.map((doc) {
-      // ignore: unnecessary_cast
-      final data = doc.data() as Map<String, dynamic>;
-      return Article(
-        title: data['title'],
-        content: data['content'],
-        imageUrl: data['imageUrl'],
-        url: data['url'],
-      );
-    }).toList();
-
-    _articles = articles;
-    notifyListeners();
+  //add article
+  Future<void> addArticle(Article article) async {
+    try {
+      await _firestore
+          .collection('articles')
+          .doc(article.title)
+          .set(article.toJson());
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
   }
 }
