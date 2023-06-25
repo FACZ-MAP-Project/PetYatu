@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Article {
   final String title;
   final String content;
-  final String imageUrl;
+  final String? imageUrl;
   final String url;
 
   Article({
