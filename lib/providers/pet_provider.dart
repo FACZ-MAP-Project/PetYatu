@@ -135,4 +135,44 @@ class PetProvider with ChangeNotifier {
 
     return _pets;
   }
+
+  // like a pet (increment like count and add user to likedBy list)
+  Future<void> likePet(String petUuid) async {
+    try {
+      await _firestore.collection('pets').doc(petUuid).update({
+        'likes': FieldValue.increment(1),
+        'likedBy': FieldValue.arrayUnion([_auth.currentUser!.uid])
+      });
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //unlike a pet (decrement like count and remove user from likedBy list)
+  Future<void> unlikePet(String petUuid) async {
+    try {
+      await _firestore.collection('pets').doc(petUuid).update({
+        'likes': FieldValue.increment(-1),
+        'likedBy': FieldValue.arrayRemove([_auth.currentUser!.uid])
+      });
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // check if pet is liked by user
+  Future<bool> isLiked(String petUuid) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await _firestore.collection('pets').doc(petUuid).get();
+
+      return documentSnapshot
+          .data()!['likedBy']
+          .contains(_auth.currentUser!.uid);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
