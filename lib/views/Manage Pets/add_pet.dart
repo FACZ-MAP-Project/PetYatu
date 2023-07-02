@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import '../../providers/pet_provider.dart';
 import '../../models/pet.dart';
 
@@ -15,14 +18,46 @@ class _AddPetState extends State<AddPet> {
   final TextEditingController _typeController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   // toggle switch control in form
   bool _isOpenForAdoption = false;
 
-  void _putAdoption() {
+  Position? _currentPosition;
+  String? _currentAddress;
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      Position? position = await Geolocator.getCurrentPosition();
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      setState(() {
+        _currentPosition = position;
+        _locationController.text =
+            '${placemarks[0].locality}, ${placemarks[0].administrativeArea}';
+        _currentAddress =
+            '${placemarks[0].locality}, ${placemarks[0].administrativeArea}';
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _putAdoption() async {
     final PetProvider _petProvider =
         Provider.of<PetProvider>(context, listen: false);
+
+    String location;
+
+    if (_locationController.text != _currentAddress) {
+      //Get Location
+      List<Location> locations =
+          await locationFromAddress(_locationController.text);
+      location = '${locations[0].latitude}, ${locations[0].longitude}';
+    } else {
+      location =
+          '${_currentPosition?.latitude}, ${_currentPosition?.longitude}';
+    }
 
     final Pet _pet = Pet(
       uid: '',
@@ -33,7 +68,7 @@ class _AddPetState extends State<AddPet> {
       gallery: [],
       owner: '',
       contact: _contactController.text,
-      location: _locationController.text,
+      location: location,
       datePosted: DateTime.now(),
       bio: _descriptionController.text,
       isOpenForAdoption: _isOpenForAdoption,
@@ -65,6 +100,12 @@ class _AddPetState extends State<AddPet> {
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
   }
 
   @override
@@ -179,6 +220,11 @@ class _AddPetState extends State<AddPet> {
           ),
         ),
         const SizedBox(height: 16),
+        // Text(
+        //   _currentPosition != null
+        //       ? 'Current Location: ${_currentPosition?.latitude}, ${_currentPosition?.longitude}'
+        //       : 'Fetching location...',
+        // ),
         TextFormField(
           controller: _locationController,
           decoration: const InputDecoration(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import '../models/pet.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
@@ -117,6 +119,10 @@ class PetProvider with ChangeNotifier {
     final List<Pet> _pets = [];
 
     try {
+      Position position = await Geolocator.getCurrentPosition();
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+
       final QuerySnapshot<Map<String, dynamic>> _querySnapshot =
           await FirebaseFirestore.instance
               .collection('pets')
@@ -124,9 +130,24 @@ class PetProvider with ChangeNotifier {
               .where("image", isNotEqualTo: "")
               .get();
 
+      //Filter pets by distance 50km
+      //location in database is in format String "latitude, longitude"
+      //Then put how long from user location to pet location into new variable as distance
       for (var doc in _querySnapshot.docs) {
-        if (doc.data()['owner'] != _auth.currentUser!.uid) {
-          _pets.add(Pet.fromJson(doc.data()));
+        //separator is comma
+        List<String> location = doc.data()['location'].split(',');
+        double distance = Geolocator.distanceBetween(
+            position.latitude,
+            position.longitude,
+            double.parse(location[0]),
+            double.parse(location[1]));
+
+        if (distance < 50000) {
+          //add distance value to the pet
+          Pet pet = Pet.fromJson(doc.data());
+          //change two decimal places
+          pet.distance = double.parse(distance.toStringAsFixed(2));
+          _pets.add(pet);
         }
       }
     } catch (e) {
