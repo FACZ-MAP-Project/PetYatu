@@ -74,8 +74,8 @@ class RootAppState extends State<RootApp> {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search_outlined),
-          label: 'Search',
+          icon: Icon(Icons.notifications_active_outlined),
+          label: 'Notification',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.book_outlined),
