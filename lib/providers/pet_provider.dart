@@ -155,8 +155,8 @@ class PetProvider with ChangeNotifier {
         if (distance < 50000) {
           //add distance value to the pet
           Pet pet = Pet.fromJson(doc.data());
-          //change two decimal places
-          pet.distance = double.parse(distance.toStringAsFixed(2));
+          //change to km and set two decimal point
+          pet.distance = double.parse((distance / 1000).toStringAsFixed(2));
           _pets.add(pet);
         }
       }
