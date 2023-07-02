@@ -159,6 +159,8 @@ class PetProvider with ChangeNotifier {
       // Get the current position
       Position position = await Geolocator.getCurrentPosition();
 
+      String owner = _auth.currentUser!.uid;
+
       final QuerySnapshot<Map<String, dynamic>> _querySnapshot =
           await FirebaseFirestore.instance
               .collection('pets')
@@ -170,6 +172,11 @@ class PetProvider with ChangeNotifier {
       // Location in the database is in the format String "latitude, longitude"
       // Then put how long from the user's location to the pet's location into a new variable as distance
       for (var doc in _querySnapshot.docs) {
+        // if pet is owned by the user, skip it
+        if (doc.data()['owner'] == owner) {
+          continue;
+        }
+
         // Separator is comma
         List<String> location = doc.data()['location'].split(',');
         double distance = Geolocator.distanceBetween(
