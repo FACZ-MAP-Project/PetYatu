@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import '../models/pet.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 
 class PetProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -126,11 +127,36 @@ class PetProvider with ChangeNotifier {
     }
   }
 
-  // get pets for adoption
+// Get pets for adoption
   Future<List<Pet>> getPetsForAdoption() async {
     final List<Pet> _pets = [];
 
     try {
+      // Check if location permission is granted
+      PermissionStatus permissionStatus =
+          await Permission.locationWhenInUse.status;
+      if (!permissionStatus.isGranted) {
+        // If permission is not granted, request the permission
+        permissionStatus = await Permission.locationWhenInUse.request();
+
+        // Handle the permission response
+        if (!permissionStatus.isGranted) {
+          // Permission denied by the user, handle it accordingly (e.g., show an error message)
+          print('Location permission denied by the user.');
+          return _pets; // Return an empty list since the location is required for filtering pets
+        }
+      }
+
+      // Check if GPS is enabled
+      bool isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      if (!isLocationServiceEnabled) {
+        // If GPS is not enabled, prompt the user to enable it
+        print('GPS is not enabled.');
+        return _pets; // Return an empty list since the location is required for filtering pets
+      }
+
+      // Get the current position
       Position position = await Geolocator.getCurrentPosition();
 
       final QuerySnapshot<Map<String, dynamic>> _querySnapshot =
@@ -140,11 +166,11 @@ class PetProvider with ChangeNotifier {
               .where("image", isNotEqualTo: "")
               .get();
 
-      //Filter pets by distance 50km
-      //location in database is in format String "latitude, longitude"
-      //Then put how long from user location to pet location into new variable as distance
+      // Filter pets by distance (50km)
+      // Location in the database is in the format String "latitude, longitude"
+      // Then put how long from the user's location to the pet's location into a new variable as distance
       for (var doc in _querySnapshot.docs) {
-        //separator is comma
+        // Separator is comma
         List<String> location = doc.data()['location'].split(',');
         double distance = Geolocator.distanceBetween(
             position.latitude,
@@ -153,9 +179,9 @@ class PetProvider with ChangeNotifier {
             double.parse(location[1]));
 
         if (distance < 50000) {
-          //add distance value to the pet
+          // Add distance value to the pet
           Pet pet = Pet.fromJson(doc.data());
-          //change to km and set two decimal point
+          // Change to km and set two decimal points
           pet.distance = double.parse((distance / 1000).toStringAsFixed(2));
           _pets.add(pet);
         }

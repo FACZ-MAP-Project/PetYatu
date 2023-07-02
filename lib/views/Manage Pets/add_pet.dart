@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -28,6 +29,30 @@ class _AddPetState extends State<AddPet> {
 
   Future<void> _getCurrentLocation() async {
     try {
+      // Check if location permission is granted
+      PermissionStatus permissionStatus =
+          await Permission.locationWhenInUse.status;
+      if (!permissionStatus.isGranted) {
+        // If permission is not granted, request the permission
+        permissionStatus = await Permission.locationWhenInUse.request();
+
+        // Handle the permission response
+        if (!permissionStatus.isGranted) {
+          // Permission denied by the user, handle it accordingly (e.g., show an error message)
+          print('Location permission denied by the user.');
+          return;
+        }
+      }
+
+      // Check if GPS is enabled
+      bool isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      if (!isLocationServiceEnabled) {
+        // If GPS is not enabled, prompt the user to enable it
+        print('GPS is not enabled.');
+        return;
+      }
+
       Position? position = await Geolocator.getCurrentPosition();
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
