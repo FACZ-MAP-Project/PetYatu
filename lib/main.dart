@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
- 
+
 import 'package:petyatu/models/pet_article.dart';
 import 'package:petyatu/providers/article_provider.dart';
 
@@ -49,6 +49,7 @@ class MainApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<ArticleProvider>(
           create: (_) => ArticleProvider(),
+        ),
         ChangeNotifierProvider<MomentProvider>(
           create: (_) => MomentProvider(),
         ),
@@ -78,7 +79,6 @@ class MainApp extends StatelessWidget {
                 ModalRoute.of(context)!.settings.arguments as Article;
             return ViewArticleScreen(article: article);
           },
-          '/pet-care': (context) => const Care(),
           '/add_moment': (context) => const AddMoment(),
         },
       ),
