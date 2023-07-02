@@ -5,6 +5,10 @@ import 'package:petyatu/models/pet.dart';
 import 'package:petyatu/providers/pet_provider.dart';
 import 'package:petyatu/views/profile_cat_page.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class SwipeCard extends StatefulWidget {
   const SwipeCard({
@@ -69,7 +73,7 @@ class SwipeCardState extends State<SwipeCard>
               controller: _swiperController,
               itemCount: _pets.length,
               itemBuilder: (BuildContext context, int index) {
-                return _itemBuilder(_pets[index]);
+                return _itemBuilder(_pets[index], _petProvider);
               },
               loop: true,
               layout: SwiperLayout.TINDER,
@@ -86,16 +90,16 @@ class SwipeCardState extends State<SwipeCard>
     );
   }
 
-  Stack _itemBuilder(Pet pet) {
+  Stack _itemBuilder(Pet pet, PetProvider petProvider) {
     return Stack(
       children: [
         _imageBox(pet),
-        _imageDetail(pet),
+        _imageDetail(pet, petProvider),
       ],
     );
   }
 
-  Positioned _imageDetail(Pet pet) {
+  Positioned _imageDetail(Pet pet, PetProvider petProvider) {
     return Positioned(
       left: 0,
       bottom: 0,
@@ -118,12 +122,12 @@ class SwipeCardState extends State<SwipeCard>
             ],
           ),
         ),
-        child: _detail(pet),
+        child: _detail(pet, petProvider),
       ),
     );
   }
 
-  Column _detail(Pet pet) {
+  Column _detail(Pet pet, PetProvider petProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -171,14 +175,7 @@ class SwipeCardState extends State<SwipeCard>
             const SizedBox(width: 10.0),
             ElevatedButton.icon(
               onPressed: () {
-                setState(() {
-                  // if (!likedItems[index]) {
-                  //   totalLikes[index]++;
-                  // } else {
-                  //   totalLikes[index]--;
-                  // }
-                  // likedItems[index] = !likedItems[index];
-                });
+                togglePetLikeStatus(petProvider, pet.uid);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
@@ -194,7 +191,7 @@ class SwipeCardState extends State<SwipeCard>
                   ),
                 ),
               ),
-              icon: Icon(
+              icon: const Icon(
                 // likedItems[index] ? Icons.favorite : Icons.favorite_border,
                 Icons.favorite,
                 color: Colors.white,
@@ -220,8 +217,8 @@ class SwipeCardState extends State<SwipeCard>
                     //star[index] = !star[index];
                   });
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(6.0),
                   child: Icon(
                     //star[index] ? Icons.star : Icons.star_border,
                     Icons.star,
@@ -263,6 +260,69 @@ class SwipeCardState extends State<SwipeCard>
           fit: BoxFit.cover,
         ),
       ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 10,
+            right: 10,
+            child: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.ios_share_outlined,
+                  color: Colors.black,
+                  size: 24.0,
+                ),
+                onPressed: () {
+                  // Handle share button click here
+                  // _sharePet(pet);
+                  _sharePet(pet);
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  Future<void> _sharePet(Pet pet) async {
+    final response = await http.get(Uri.parse(pet.image ?? ""));
+    final bytes = response.bodyBytes;
+
+    final tempDir = await getTemporaryDirectory();
+    final tempPath = '${tempDir.path}/image.png';
+
+    final file = File(tempPath);
+    await file.writeAsBytes(bytes);
+
+    await Share.shareXFiles(
+      [XFile(tempPath)],
+      text: "I found ${pet.name}!\n"
+          "Check out more pets at https://facz-map-project.github.io/PetYatu/",
+      subject: "Look at this pet!",
+    );
+
+    // Optionally, delete the temporary file after sharing
+    await file.delete();
+
+    // Share.share(
+    //   "Check out this pet: ${pet.name}! ${pet.image}",
+    //   subject: "Look at this pet!",
+    // );
+  }
+
+  Future<void> togglePetLikeStatus(
+      PetProvider petProvider, String petUid) async {
+    if (await petProvider.isLiked(petUid)) {
+      petProvider.unlikePet(petUid);
+      print("unliked");
+    } else {
+      petProvider.likePet(petUid);
+      print("liked");
+    }
   }
 }
