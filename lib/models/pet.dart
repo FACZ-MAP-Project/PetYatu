@@ -18,6 +18,8 @@ class Pet {
   int? likes;
   List<String>? likedBy;
 
+  double? distance;
+
   Pet({
     required this.uid,
     required this.name,

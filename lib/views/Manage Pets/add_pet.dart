@@ -1,8 +1,18 @@
+
 // import 'dart:html';
 
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
 import '../../providers/history_provider.dart';
+
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
+
 import '../../providers/pet_provider.dart';
 import '../../models/pet.dart';
 import '../../models/history.dart';
@@ -19,17 +29,75 @@ class _AddPetState extends State<AddPet> {
   final TextEditingController _typeController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   // toggle switch control in form
   bool _isOpenForAdoption = false;
 
-  void _putAdoption() {
+  Position? _currentPosition;
+  String? _currentAddress;
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      // Check if location permission is granted
+      PermissionStatus permissionStatus =
+          await Permission.locationWhenInUse.status;
+      if (!permissionStatus.isGranted) {
+        // If permission is not granted, request the permission
+        permissionStatus = await Permission.locationWhenInUse.request();
+
+        // Handle the permission response
+        if (!permissionStatus.isGranted) {
+          // Permission denied by the user, handle it accordingly (e.g., show an error message)
+          print('Location permission denied by the user.');
+          return;
+        }
+      }
+
+      // Check if GPS is enabled
+      bool isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      if (!isLocationServiceEnabled) {
+        // If GPS is not enabled, prompt the user to enable it
+        print('GPS is not enabled.');
+        return;
+      }
+
+      Position? position = await Geolocator.getCurrentPosition();
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      setState(() {
+        _currentPosition = position;
+        _locationController.text =
+            '${placemarks[0].locality}, ${placemarks[0].administrativeArea}';
+        _currentAddress =
+            '${placemarks[0].locality}, ${placemarks[0].administrativeArea}';
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _putAdoption() async {
     final PetProvider _petProvider =
         Provider.of<PetProvider>(context, listen: false);
 
+
     final HistoryProvider _historyProvider =
         Provider.of<HistoryProvider>(context, listen: false);
+
+    String location;
+
+    if (_locationController.text != _currentAddress) {
+      //Get Location
+      List<Location> locations =
+          await locationFromAddress(_locationController.text);
+      location = '${locations[0].latitude}, ${locations[0].longitude}';
+    } else {
+      location =
+          '${_currentPosition?.latitude}, ${_currentPosition?.longitude}';
+    }
+
 
     final Pet _pet = Pet(
       uid: '',
@@ -40,7 +108,7 @@ class _AddPetState extends State<AddPet> {
       gallery: [],
       owner: '',
       contact: _contactController.text,
-      location: _locationController.text,
+      location: location,
       datePosted: DateTime.now(),
       bio: _descriptionController.text,
       isOpenForAdoption: _isOpenForAdoption,
@@ -73,6 +141,12 @@ class _AddPetState extends State<AddPet> {
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
   }
 
   @override
@@ -187,6 +261,11 @@ class _AddPetState extends State<AddPet> {
           ),
         ),
         const SizedBox(height: 16),
+        // Text(
+        //   _currentPosition != null
+        //       ? 'Current Location: ${_currentPosition?.latitude}, ${_currentPosition?.longitude}'
+        //       : 'Fetching location...',
+        // ),
         TextFormField(
           controller: _locationController,
           decoration: const InputDecoration(
