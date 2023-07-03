@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:petyatu/models/history.dart';
 import 'package:petyatu/providers/history_provider.dart';
@@ -120,7 +121,23 @@ class _HistoryPageState extends State<HistoryPage> {
                     "$minutesDifference ${minutesDifference == 1 ? 'minute' : 'minutes'} ago";
               }
               return ListTile(
-                leading: Image.network(imageUrl),
+                leading: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 50.0,
+                    height: 50.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
                 title: Text(snapshot.data![index].sentence),
                 subtitle: Text(timeAgo),
                 onTap: () {

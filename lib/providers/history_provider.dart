@@ -130,4 +130,27 @@ class HistoryProvider with ChangeNotifier {
 
     return _history;
   }
+
+  Future<void> historyUpdatePet(Pet updatedPet) async {
+    History history = History(
+      uid: _firestore.collection('history').doc().id,
+      type: 'UPDATED',
+      user: _auth.currentUser!.uid,
+      sentence: 'You updated a pet: ${updatedPet.name}',
+      pet: updatedPet.uid,
+      otherUser: '',
+      image: updatedPet.image ?? '',
+      dateCreated: DateTime.now(),
+    );
+
+    try {
+      await _firestore
+          .collection('history')
+          .doc(history.uid)
+          .set(history.toJson());
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

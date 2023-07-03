@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petyatu/providers/history_provider.dart';
+import 'package:petyatu/views/Manage%20Pets/edit_pet.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -209,8 +210,11 @@ class ViewPet extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed('/edit-pet', arguments: pet.uid);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPet(pet: pet),
+                          ));
                     },
                     child: const Text('Edit'),
                   ),

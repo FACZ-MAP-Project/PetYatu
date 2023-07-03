@@ -268,4 +268,16 @@ class PetProvider with ChangeNotifier {
       rethrow;
     }
   }
+
+  Future<void> updatePet(Pet updatedPet) async {
+    try {
+      await _firestore
+          .collection('pets')
+          .doc(updatedPet.uid)
+          .update(updatedPet.toJson());
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
