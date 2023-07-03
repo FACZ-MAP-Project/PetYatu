@@ -68,6 +68,7 @@ class SwipeCardState extends State<SwipeCard>
             return Scaffold(
                 floatingActionButton: FloatingActionButton(
                   onPressed: () {
+                    setState(() {});
                     _petProvider.getPetsForAdoption();
                   },
                   child: const Icon(Icons.location_searching_outlined),
@@ -79,6 +80,7 @@ class SwipeCardState extends State<SwipeCard>
             return Scaffold(
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
+                  setState(() {});
                   _petProvider.getPetsForAdoption();
                 },
                 child: const Icon(Icons.location_searching_outlined),
