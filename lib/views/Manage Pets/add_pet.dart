@@ -48,17 +48,9 @@ class _AddPetState extends State<AddPet> {
       likedBy: [],
     );
 
-    final History _history = History(
-      uid: '',
-      user: '',
-      pet: '',
-      otherUser: '',
-      image: '',
-      dateCreated: DateTime.now(),
-    );
-
     try {
       _petProvider.createPet(_pet);
+      _historyProvider.historyAddPet(_pet);
       // show success dialog
       showDialog(
         context: context,
