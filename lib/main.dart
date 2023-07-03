@@ -1,6 +1,10 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:petyatu/providers/history_provider.dart';
 import 'package:petyatu/providers/moment_provider.dart';
+import 'package:petyatu/services/push_notification.dart';
 import 'package:petyatu/views/add_moment.dart';
 import 'package:petyatu/views/profile_cat_page.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +27,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await PushNotificationService().initNotifications();
   runApp(const MainApp());
 }
 
@@ -44,6 +49,9 @@ class MainApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<MomentProvider>(
           create: (_) => MomentProvider(),
+        ),
+        ChangeNotifierProvider<HistoryProvider>(
+          create: (_) => HistoryProvider(),
         ),
       ],
       child: MaterialApp(

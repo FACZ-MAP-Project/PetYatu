@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class Search extends StatelessWidget {
-  const Search({
+class HistoryPage extends StatelessWidget {
+  const HistoryPage({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _appBar(), body: const Center(child: Text('Search')));
+        appBar: _appBar(), body: const Center(child: Text('History')));
   }
 
   AppBar _appBar() {

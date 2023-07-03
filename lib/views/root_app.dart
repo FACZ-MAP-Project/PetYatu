@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petyatu/views/home_page.dart';
-import 'package:petyatu/views/search_page.dart';
+import 'package:petyatu/views/history_page.dart';
 import 'package:petyatu/views/care_page.dart';
 import 'package:petyatu/views/profile_person_page.dart';
 
@@ -55,7 +55,7 @@ class RootAppState extends State<RootApp> {
       index: _selectedIndex,
       children: const [
         HomePage(),
-        Search(),
+        HistoryPage(),
         Care(),
         Profile(),
       ],
@@ -74,8 +74,8 @@ class RootAppState extends State<RootApp> {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search_outlined),
-          label: 'Search',
+          icon: Icon(Icons.history_outlined),
+          label: 'History',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.book_outlined),

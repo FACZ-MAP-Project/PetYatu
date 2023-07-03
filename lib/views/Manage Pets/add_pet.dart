@@ -1,7 +1,11 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../providers/history_provider.dart';
 import '../../providers/pet_provider.dart';
 import '../../models/pet.dart';
+import '../../models/history.dart';
 
 class AddPet extends StatefulWidget {
   const AddPet({Key? key}) : super(key: key);
@@ -24,6 +28,9 @@ class _AddPetState extends State<AddPet> {
     final PetProvider _petProvider =
         Provider.of<PetProvider>(context, listen: false);
 
+    final HistoryProvider _historyProvider =
+        Provider.of<HistoryProvider>(context, listen: false);
+
     final Pet _pet = Pet(
       uid: '',
       name: _nameController.text,
@@ -39,6 +46,15 @@ class _AddPetState extends State<AddPet> {
       isOpenForAdoption: _isOpenForAdoption,
       likes: 0,
       likedBy: [],
+    );
+
+    final History _history = History(
+      uid: '',
+      user: '',
+      pet: '',
+      otherUser: '',
+      image: '',
+      dateCreated: DateTime.now(),
     );
 
     try {

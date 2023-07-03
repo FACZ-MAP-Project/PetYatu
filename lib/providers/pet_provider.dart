@@ -20,6 +20,7 @@ class PetProvider with ChangeNotifier {
 
     try {
       await _firestore.collection('pets').doc(pet.uid).set(pet.toJson());
+      // await _firestore.collection('history')
       notifyListeners();
     } catch (e) {
       rethrow;
