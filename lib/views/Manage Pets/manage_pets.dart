@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petyatu/providers/history_provider.dart';
 import 'package:provider/provider.dart';
 import '../../providers/pet_provider.dart';
 import '../../models/pet.dart';
@@ -50,6 +51,9 @@ class _ManagePetsState extends State<ManagePets> {
     final PetProvider _petProvider =
         Provider.of<PetProvider>(context, listen: true);
 
+    final HistoryProvider _historyProvider =
+        Provider.of<HistoryProvider>(context, listen: true);
+
     return FutureBuilder<List<Pet>>(
       future: _petProvider.viewMyPets(),
       builder: (context, snapshot) {
@@ -92,6 +96,7 @@ class _ManagePetsState extends State<ManagePets> {
                       onPressed: () {
                         // delete pet
                         _petProvider.deletePet(_pets[index].uid);
+                        _historyProvider.historyDeletePet(_pets[index]);
                       },
                       icon: const Icon(Icons.delete),
                     ),

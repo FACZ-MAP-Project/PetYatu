@@ -65,20 +65,37 @@ class SwipeCardState extends State<SwipeCard>
           final List<Pet> _pets = snapshot.data!;
 
           if (_pets.isEmpty) {
-            return const Center(
-              child: Text('No pets found'),
-            );
+            return Scaffold(
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    setState(() {});
+                    _petProvider.getPetsForAdoption();
+                  },
+                  child: const Icon(Icons.location_searching_outlined),
+                ),
+                body: const Center(
+                  child: Text('No pets found'),
+                ));
           } else {
-            return Swiper(
-              controller: _swiperController,
-              itemCount: _pets.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _itemBuilder(_pets[index]);
-              },
-              loop: true,
-              layout: SwiperLayout.TINDER,
-              itemWidth: MediaQuery.of(context).size.width,
-              itemHeight: MediaQuery.of(context).size.height,
+            return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  setState(() {});
+                  _petProvider.getPetsForAdoption();
+                },
+                child: const Icon(Icons.location_searching_outlined),
+              ),
+              body: Swiper(
+                controller: _swiperController,
+                itemCount: _pets.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _itemBuilder(_pets[index], _petProvider);
+                },
+                loop: true,
+                layout: SwiperLayout.TINDER,
+                itemWidth: MediaQuery.of(context).size.width,
+                itemHeight: MediaQuery.of(context).size.height,
+              ),
             );
           }
         }
@@ -90,16 +107,16 @@ class SwipeCardState extends State<SwipeCard>
     );
   }
 
-  Stack _itemBuilder(Pet pet) {
+  Stack _itemBuilder(Pet pet, PetProvider petProvider) {
     return Stack(
       children: [
         _imageBox(pet),
-        _imageDetail(pet),
+        _imageDetail(pet, petProvider),
       ],
     );
   }
 
-  Positioned _imageDetail(Pet pet) {
+  Positioned _imageDetail(Pet pet, PetProvider petProvider) {
     return Positioned(
       left: 0,
       bottom: 0,
@@ -122,12 +139,12 @@ class SwipeCardState extends State<SwipeCard>
             ],
           ),
         ),
-        child: _detail(pet),
+        child: _detail(pet, petProvider),
       ),
     );
   }
 
-  Column _detail(Pet pet) {
+  Column _detail(Pet pet, PetProvider petProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -136,6 +153,15 @@ class SwipeCardState extends State<SwipeCard>
           style: const TextStyle(
             color: Colors.white,
             fontSize: 50.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10.0),
+        Text(
+          "${pet.distance} km away",
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 20.0,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -175,14 +201,7 @@ class SwipeCardState extends State<SwipeCard>
             const SizedBox(width: 10.0),
             ElevatedButton.icon(
               onPressed: () {
-                setState(() {
-                  // if (!likedItems[index]) {
-                  //   totalLikes[index]++;
-                  // } else {
-                  //   totalLikes[index]--;
-                  // }
-                  // likedItems[index] = !likedItems[index];
-                });
+                togglePetLikeStatus(petProvider, pet.uid);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
@@ -198,7 +217,7 @@ class SwipeCardState extends State<SwipeCard>
                   ),
                 ),
               ),
-              icon: Icon(
+              icon: const Icon(
                 // likedItems[index] ? Icons.favorite : Icons.favorite_border,
                 Icons.favorite,
                 color: Colors.white,
@@ -224,8 +243,8 @@ class SwipeCardState extends State<SwipeCard>
                     //star[index] = !star[index];
                   });
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(6.0),
                   child: Icon(
                     //star[index] ? Icons.star : Icons.star_border,
                     Icons.star,
@@ -320,5 +339,16 @@ class SwipeCardState extends State<SwipeCard>
     //   "Check out this pet: ${pet.name}! ${pet.image}",
     //   subject: "Look at this pet!",
     // );
+  }
+
+  Future<void> togglePetLikeStatus(
+      PetProvider petProvider, String petUid) async {
+    if (await petProvider.isLiked(petUid)) {
+      petProvider.unlikePet(petUid);
+      print("unliked");
+    } else {
+      petProvider.likePet(petUid);
+      print("liked");
+    }
   }
 }

@@ -1,5 +1,3 @@
-// import 'dart:html';
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -15,14 +13,16 @@ import '../../providers/pet_provider.dart';
 import '../../models/pet.dart';
 import '../../models/history.dart';
 
-class AddPet extends StatefulWidget {
-  const AddPet({Key? key}) : super(key: key);
+class EditPet extends StatefulWidget {
+  final Pet pet;
+
+  const EditPet({Key? key, required this.pet}) : super(key: key);
 
   @override
-  _AddPetState createState() => _AddPetState();
+  _EditPetState createState() => _EditPetState();
 }
 
-class _AddPetState extends State<AddPet> {
+class _EditPetState extends State<EditPet> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _typeController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
@@ -54,11 +54,6 @@ class _AddPetState extends State<AddPet> {
                 await [Permission.location].request();
 
             if (status[Permission.location] == PermissionStatus.denied) {
-              // Permissions are denied, next time you could try
-              // requesting permissions again (this is also where
-              // Android's shouldShowRequestPermissionRationale
-              // returned true. According to Android guidelines
-              // your App should show an explanatory UI now.
               return Future.error('Location permissions are denied');
             }
           }
@@ -69,23 +64,15 @@ class _AddPetState extends State<AddPet> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          // Permissions are denied, next time you could try
-          // requesting permissions again (this is also where
-          // Android's shouldShowRequestPermissionRationale
-          // returned true. According to Android guidelines
-          // your App should show an explanatory UI now.
           return Future.error('Location permissions are denied');
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        // Permissions are denied forever, handle appropriately.
         return Future.error(
             'Location permissions are permanently denied, we cannot request permissions.');
       }
 
-      // When we reach here, permissions are granted and we can
-      // continue accessing the position of the device.
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       List<Placemark> placemarks =
@@ -102,7 +89,7 @@ class _AddPetState extends State<AddPet> {
     }
   }
 
-  Future<void> _putAdoption() async {
+  Future<void> _updatePet() async {
     final PetProvider _petProvider =
         Provider.of<PetProvider>(context, listen: false);
 
@@ -112,7 +99,6 @@ class _AddPetState extends State<AddPet> {
     String location;
 
     if (_locationController.text != _currentAddress) {
-      //Get Location
       List<Location> locations =
           await locationFromAddress(_locationController.text);
       location = '${locations[0].latitude}, ${locations[0].longitude}';
@@ -121,54 +107,57 @@ class _AddPetState extends State<AddPet> {
           '${_currentPosition?.latitude}, ${_currentPosition?.longitude}';
     }
 
-    final Pet _pet = Pet(
-      uid: '',
+    final Pet updatedPet = Pet(
+      uid: widget.pet.uid,
       name: _nameController.text,
       type: _typeController.text,
-      image: '',
-      age: int.parse(_ageController.text),
-      gallery: [],
-      owner: '',
+      image: widget.pet.image,
+      gallery: widget.pet.gallery,
+      owner: widget.pet.owner,
+      datePosted: widget.pet.datePosted,
+      likes: widget.pet.likes,
+      likedBy: widget.pet.likedBy,
+      age: int.tryParse(_ageController.text) ?? 0,
+      bio: _descriptionController.text,
       contact: _contactController.text,
       location: location,
-      datePosted: DateTime.now(),
-      bio: _descriptionController.text,
       isOpenForAdoption: _isOpenForAdoption,
-      likes: 0,
-      likedBy: [],
     );
 
-    try {
-      _petProvider.createPet(_pet);
-      _historyProvider.historyAddPet(_pet);
-      // show success dialog
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Success'),
-            content: const Text('Pet has been added'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    } catch (e) {
-      print(e);
-    }
+    await _petProvider.updatePet(updatedPet);
+
+    await _historyProvider.historyUpdatePet(updatedPet);
+
+    // ignore: use_build_context_synchronously
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Success'),
+          content: const Text('Pet detail has been updated'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+    _nameController.text = widget.pet.name;
+    _typeController.text = widget.pet.type!;
+    _ageController.text = widget.pet.age.toString();
+    _descriptionController.text = widget.pet.bio!;
+    _contactController.text = widget.pet.contact!;
+    _locationController.text = widget.pet.location!;
+    _isOpenForAdoption = widget.pet.isOpenForAdoption!;
   }
 
   @override
@@ -217,7 +206,7 @@ class _AddPetState extends State<AddPet> {
                 child: Column(
                   children: [
                     const Text(
-                      'Add Pet',
+                      'Edit Pet',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -225,13 +214,18 @@ class _AddPetState extends State<AddPet> {
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'Please fill the form below to put your pet for adoption',
+                      'Please update the information of your pet',
                       style: TextStyle(
                         fontSize: 16,
                       ),
                     ),
                     const SizedBox(height: 16),
                     _form(),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _updatePet,
+                      child: const Text('Update Pet'),
+                    ),
                   ],
                 ),
               ),
@@ -267,27 +261,25 @@ class _AddPetState extends State<AddPet> {
             labelText: 'Age',
             border: OutlineInputBorder(),
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty || int.parse(value) <= 0) {
-              return 'Please enter age';
-            }
-            return null;
-          },
         ),
         const SizedBox(height: 16),
         TextFormField(
           controller: _descriptionController,
+          maxLines: 4,
           decoration: const InputDecoration(
             labelText: 'Description',
             border: OutlineInputBorder(),
           ),
         ),
         const SizedBox(height: 16),
-        // Text(
-        //   _currentPosition != null
-        //       ? 'Current Location: ${_currentPosition?.latitude}, ${_currentPosition?.longitude}'
-        //       : 'Fetching location...',
-        // ),
+        TextFormField(
+          controller: _contactController,
+          decoration: const InputDecoration(
+            labelText: 'Contact',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 16),
         TextFormField(
           controller: _locationController,
           decoration: InputDecoration(
@@ -301,21 +293,14 @@ class _AddPetState extends State<AddPet> {
             ),
           ),
         ),
-
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _contactController,
-          decoration: const InputDecoration(
-            labelText: 'Contact',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        // toggle switch
         const SizedBox(height: 16),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Open for Adoption'),
+            Text(
+              'Open for Adoption',
+              style: TextStyle(fontSize: 16),
+            ),
+            const Spacer(),
             Switch(
               value: _isOpenForAdoption,
               onChanged: (value) {
@@ -325,11 +310,6 @@ class _AddPetState extends State<AddPet> {
               },
             ),
           ],
-        ),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: _putAdoption,
-          child: const Text('Add Pet'),
         ),
       ],
     );

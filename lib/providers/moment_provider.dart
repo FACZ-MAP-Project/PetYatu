@@ -12,8 +12,20 @@ class MomentProvider with ChangeNotifier {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   // create moment
-  Future<void> createMoment(Moment moment) async {
+  Future<void> createMoment(
+    Moment moment,
+    File imageFile,
+  ) async {
     // set moment.ownerId to current user's uid
+    String fileName = const Uuid().v4();
+
+    Reference reference = _storage.ref().child('moments').child(fileName);
+
+    await reference.putFile(imageFile);
+
+    String imageUrl = await reference.getDownloadURL();
+
+    moment.image = imageUrl;
     moment.owner = _auth.currentUser!.uid;
     // set uid to document id
     moment.uid = _firestore.collection('moments').doc().id;
@@ -51,26 +63,13 @@ class MomentProvider with ChangeNotifier {
   }
 
   // delete moment
-  Future<void> deleteMoment(String uid) async {
+  Future<void> deleteMoment(String uid, String link) async {
     try {
+      //delete image on storage
+      await _storage.refFromURL(link).delete();
       await _firestore.collection('moments').doc(uid).delete();
+
       notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  //upload moment imageS
-  Future<String> uploadMomentImage(File image) async {
-    try {
-      final String _uid = _auth.currentUser!.uid;
-      final String _momentId = Uuid().v4();
-      final String _path = 'moments/$_uid/$_momentId.jpg';
-
-      await _storage.ref(_path).putFile(image);
-      final String _url = await _storage.ref(_path).getDownloadURL();
-
-      return _url;
     } catch (e) {
       rethrow;
     }
@@ -135,6 +134,17 @@ class MomentProvider with ChangeNotifier {
       await _firestore.collection('moments').doc(uid).update({
         'comments': FieldValue.increment(-1),
         'commentsBy': FieldValue.arrayRemove([_auth.currentUser!.uid]),
+      });
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> editDescription(String uid, String newDescription) async {
+    try {
+      await _firestore.collection('moments').doc(uid).update({
+        'caption': newDescription,
       });
       notifyListeners();
     } catch (e) {
