@@ -1,6 +1,4 @@
-
 // import 'dart:html';
-
 
 import 'dart:async';
 
@@ -38,32 +36,58 @@ class _AddPetState extends State<AddPet> {
   String? _currentAddress;
 
   Future<void> _getCurrentLocation() async {
+    LocationPermission permission;
+    bool serviceEnabled;
     try {
-      // Check if location permission is granted
-      PermissionStatus permissionStatus =
-          await Permission.locationWhenInUse.status;
-      if (!permissionStatus.isGranted) {
-        // If permission is not granted, request the permission
-        permissionStatus = await Permission.locationWhenInUse.request();
-
-        // Handle the permission response
+      // Test if location services are enabled.
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Check if location permission is granted
+        PermissionStatus permissionStatus =
+            await Permission.locationWhenInUse.status;
         if (!permissionStatus.isGranted) {
-          // Permission denied by the user, handle it accordingly (e.g., show an error message)
-          print('Location permission denied by the user.');
-          return;
+          if (await Permission.location.isPermanentlyDenied) {
+            openAppSettings();
+          } else {
+            // If permission is not granted, request the permission
+            Map<Permission, PermissionStatus> status =
+                await [Permission.location].request();
+
+            if (status[Permission.location] == PermissionStatus.denied) {
+              // Permissions are denied, next time you could try
+              // requesting permissions again (this is also where
+              // Android's shouldShowRequestPermissionRationale
+              // returned true. According to Android guidelines
+              // your App should show an explanatory UI now.
+              return Future.error('Location permissions are denied');
+            }
+          }
         }
       }
 
-      // Check if GPS is enabled
-      bool isLocationServiceEnabled =
-          await Geolocator.isLocationServiceEnabled();
-      if (!isLocationServiceEnabled) {
-        // If GPS is not enabled, prompt the user to enable it
-        print('GPS is not enabled.');
-        return;
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          // Permissions are denied, next time you could try
+          // requesting permissions again (this is also where
+          // Android's shouldShowRequestPermissionRationale
+          // returned true. According to Android guidelines
+          // your App should show an explanatory UI now.
+          return Future.error('Location permissions are denied');
+        }
       }
 
-      Position? position = await Geolocator.getCurrentPosition();
+      if (permission == LocationPermission.deniedForever) {
+        // Permissions are denied forever, handle appropriately.
+        return Future.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+      }
+
+      // When we reach here, permissions are granted and we can
+      // continue accessing the position of the device.
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
       setState(() {
@@ -82,7 +106,6 @@ class _AddPetState extends State<AddPet> {
     final PetProvider _petProvider =
         Provider.of<PetProvider>(context, listen: false);
 
-
     final HistoryProvider _historyProvider =
         Provider.of<HistoryProvider>(context, listen: false);
 
@@ -97,7 +120,6 @@ class _AddPetState extends State<AddPet> {
       location =
           '${_currentPosition?.latitude}, ${_currentPosition?.longitude}';
     }
-
 
     final Pet _pet = Pet(
       uid: '',
@@ -268,11 +290,18 @@ class _AddPetState extends State<AddPet> {
         // ),
         TextFormField(
           controller: _locationController,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Location',
             border: OutlineInputBorder(),
+            suffixIcon: IconButton(
+              icon: Icon(Icons.location_searching_outlined),
+              onPressed: () {
+                _getCurrentLocation();
+              },
+            ),
           ),
         ),
+
         const SizedBox(height: 16),
         TextFormField(
           controller: _contactController,

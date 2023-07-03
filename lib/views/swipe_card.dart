@@ -65,20 +65,35 @@ class SwipeCardState extends State<SwipeCard>
           final List<Pet> _pets = snapshot.data!;
 
           if (_pets.isEmpty) {
-            return const Center(
-              child: Text('No pets found'),
-            );
+            return Scaffold(
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    _petProvider.getPetsForAdoption();
+                  },
+                  child: const Icon(Icons.location_searching_outlined),
+                ),
+                body: const Center(
+                  child: Text('No pets found'),
+                ));
           } else {
-            return Swiper(
-              controller: _swiperController,
-              itemCount: _pets.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _itemBuilder(_pets[index], _petProvider);
-              },
-              loop: true,
-              layout: SwiperLayout.TINDER,
-              itemWidth: MediaQuery.of(context).size.width,
-              itemHeight: MediaQuery.of(context).size.height,
+            return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  _petProvider.getPetsForAdoption();
+                },
+                child: const Icon(Icons.location_searching_outlined),
+              ),
+              body: Swiper(
+                controller: _swiperController,
+                itemCount: _pets.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _itemBuilder(_pets[index], _petProvider);
+                },
+                loop: true,
+                layout: SwiperLayout.TINDER,
+                itemWidth: MediaQuery.of(context).size.width,
+                itemHeight: MediaQuery.of(context).size.height,
+              ),
             );
           }
         }
