@@ -110,27 +110,23 @@ class PetProvider with ChangeNotifier {
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           await _firestore.collection('pets').doc(petUuid).get();
 
-
       if (documentSnapshot.exists) {
-        return Pet.fromJson(documentSnapshot.data()!);
+        Pet pet = Pet.fromJson(documentSnapshot.data()!);
+
+        //separate location into latitude and longitude
+        List<String> location = pet.location!.split(',');
+
+        //get location name from latitude and longitude
+        List<Placemark> locations = await placemarkFromCoordinates(
+            double.parse(location[0]), double.parse(location[1]));
+
+        pet.location =
+            '${locations[0].locality}, ${locations[0].administrativeArea}';
+
+        return pet;
       } else {
         return Pet.empty();
       }
-
-      Pet pet = Pet.fromJson(documentSnapshot.data()!);
-
-      //separate location into latitude and longitude
-      List<String> location = pet.location!.split(',');
-
-      //get location name from latitude and longitude
-      List<Placemark> locations = await placemarkFromCoordinates(
-          double.parse(location[0]), double.parse(location[1]));
-
-      pet.location =
-          '${locations[0].locality}, ${locations[0].administrativeArea}';
-
-      return pet;
-
     } catch (e) {
       rethrow;
     }
