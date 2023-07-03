@@ -140,6 +140,15 @@ class SwipeCardState extends State<SwipeCard>
           ),
         ),
         const SizedBox(height: 10.0),
+        Text(
+          "${pet.distance} km away",
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10.0),
         Row(
           children: [
             ElevatedButton.icon(
