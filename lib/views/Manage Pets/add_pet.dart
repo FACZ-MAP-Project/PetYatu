@@ -1,11 +1,21 @@
+
+// import 'dart:html';
+
+
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import '../../providers/history_provider.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+
 import '../../providers/pet_provider.dart';
 import '../../models/pet.dart';
+import '../../models/history.dart';
 
 class AddPet extends StatefulWidget {
   const AddPet({Key? key}) : super(key: key);
@@ -72,6 +82,10 @@ class _AddPetState extends State<AddPet> {
     final PetProvider _petProvider =
         Provider.of<PetProvider>(context, listen: false);
 
+
+    final HistoryProvider _historyProvider =
+        Provider.of<HistoryProvider>(context, listen: false);
+
     String location;
 
     if (_locationController.text != _currentAddress) {
@@ -83,6 +97,7 @@ class _AddPetState extends State<AddPet> {
       location =
           '${_currentPosition?.latitude}, ${_currentPosition?.longitude}';
     }
+
 
     final Pet _pet = Pet(
       uid: '',
@@ -103,6 +118,7 @@ class _AddPetState extends State<AddPet> {
 
     try {
       _petProvider.createPet(_pet);
+      _historyProvider.historyAddPet(_pet);
       // show success dialog
       showDialog(
         context: context,

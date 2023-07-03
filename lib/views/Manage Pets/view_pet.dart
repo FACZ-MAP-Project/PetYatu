@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petyatu/providers/history_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -28,7 +29,7 @@ class ViewPet extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData || snapshot.data?.uid == '') {
             return const Center(
               child: Text('No pet found.'),
             );
@@ -54,6 +55,8 @@ class ViewPet extends StatelessWidget {
   Widget _body(BuildContext context, Pet pet) {
     final PetProvider petProvider =
         Provider.of<PetProvider>(context, listen: true);
+    final HistoryProvider historyProvider =
+        Provider.of<HistoryProvider>(context, listen: false);
     final ImagePicker picker = ImagePicker();
 
     // ignore: no_leading_underscores_for_local_identifiers
@@ -61,7 +64,9 @@ class ViewPet extends StatelessWidget {
       final XFile? pickedFile = await picker.pickImage(source: source);
       if (pickedFile != null) {
         File imageFile = File(pickedFile.path);
-        await petProvider.uploadImage(imageFile, pet.uid, pet.image);
+        String imageUrl =
+            await petProvider.uploadImage(imageFile, pet.uid, pet.image);
+        historyProvider.historyPetImage(pet, imageUrl);
       }
     }
 
@@ -141,6 +146,8 @@ class ViewPet extends StatelessWidget {
   Widget _petInfoWidget(BuildContext context, Pet pet) {
     final PetProvider petProvider =
         Provider.of<PetProvider>(context, listen: true);
+    final HistoryProvider historyProvider =
+        Provider.of<HistoryProvider>(context, listen: true);
     return SizedBox(
       width: 300,
       child: Card(
@@ -210,6 +217,7 @@ class ViewPet extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       petProvider.deletePet(pet.uid);
+                      historyProvider.historyDeletePet(pet);
                       Navigator.of(context)
                           .popUntil(ModalRoute.withName('/manage-pets'));
                     },

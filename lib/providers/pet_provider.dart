@@ -23,6 +23,7 @@ class PetProvider with ChangeNotifier {
 
     try {
       await _firestore.collection('pets').doc(pet.uid).set(pet.toJson());
+      // await _firestore.collection('history')
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -109,6 +110,13 @@ class PetProvider with ChangeNotifier {
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           await _firestore.collection('pets').doc(petUuid).get();
 
+
+      if (documentSnapshot.exists) {
+        return Pet.fromJson(documentSnapshot.data()!);
+      } else {
+        return Pet.empty();
+      }
+
       Pet pet = Pet.fromJson(documentSnapshot.data()!);
 
       //separate location into latitude and longitude
@@ -122,6 +130,7 @@ class PetProvider with ChangeNotifier {
           '${locations[0].locality}, ${locations[0].administrativeArea}';
 
       return pet;
+
     } catch (e) {
       rethrow;
     }

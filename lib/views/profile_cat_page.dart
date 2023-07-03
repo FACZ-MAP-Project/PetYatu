@@ -33,7 +33,7 @@ class Profile extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData || snapshot.data?.uid == '') {
             return const Center(
               child: Text('No pet found.'),
             );
