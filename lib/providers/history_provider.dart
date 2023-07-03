@@ -42,7 +42,7 @@ class HistoryProvider with ChangeNotifier {
       uid: _firestore.collection('history').doc().id,
       type: 'MY_PET',
       user: _auth.currentUser!.uid,
-      sentence: 'You added an image for pet: ${pet.name}',
+      sentence: 'You updated the image for pet: ${pet.name}',
       pet: pet.uid,
       otherUser: '',
       image: imageUrl,
@@ -55,19 +55,19 @@ class HistoryProvider with ChangeNotifier {
           .doc(history.uid)
           .set(history.toJson());
       // find all history with pet.uid and change image to imageUrl
-      final QuerySnapshot<Map<String, dynamic>> _querySnapshot =
-          await _firestore
-              .collection('history')
-              .where('pet', isEqualTo: pet.uid)
-              .get();
+      // final QuerySnapshot<Map<String, dynamic>> _querySnapshot =
+      //     await _firestore
+      //         .collection('history')
+      //         .where('pet', isEqualTo: pet.uid)
+      //         .get();
 
-      // loop through all history with pet.uid and change image to imageUrl
-      for (var doc in _querySnapshot.docs) {
-        await _firestore
-            .collection('history')
-            .doc(doc.id)
-            .update({'image': imageUrl});
-      }
+      // // loop through all history with pet.uid and change image to imageUrl
+      // for (var doc in _querySnapshot.docs) {
+      //   await _firestore
+      //       .collection('history')
+      //       .doc(doc.id)
+      //       .update({'image': imageUrl});
+      // }
       notifyListeners();
     } catch (e) {
       rethrow;

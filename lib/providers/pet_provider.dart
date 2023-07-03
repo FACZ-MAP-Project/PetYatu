@@ -74,9 +74,9 @@ class PetProvider with ChangeNotifier {
       await reference.putFile(imageFile);
 
       // Delete the old image
-      if (oldImage != "") {
-        await _storage.refFromURL(oldImage!).delete();
-      }
+      // if (oldImage != "") {
+      //   await _storage.refFromURL(oldImage!).delete();
+      // }
 
       // Get the download URL for the uploaded image
       String imageUrl = await reference.getDownloadURL();
