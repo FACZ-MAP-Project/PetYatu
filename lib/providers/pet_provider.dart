@@ -107,7 +107,11 @@ class PetProvider with ChangeNotifier {
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           await _firestore.collection('pets').doc(petUuid).get();
 
-      return Pet.fromJson(documentSnapshot.data()!);
+      if (documentSnapshot.exists) {
+        return Pet.fromJson(documentSnapshot.data()!);
+      } else {
+        return Pet.empty();
+      }
     } catch (e) {
       rethrow;
     }

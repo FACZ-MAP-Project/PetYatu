@@ -1,5 +1,6 @@
 class History {
   String uid;
+  String type;
   String user;
   String sentence;
   String pet;
@@ -9,6 +10,7 @@ class History {
 
   History({
     required this.uid,
+    required this.type,
     required this.user,
     required this.sentence,
     required this.pet,
@@ -20,6 +22,7 @@ class History {
   // empty constructor
   History.empty()
       : uid = '',
+        type = '',
         user = '',
         sentence = '',
         pet = '',
@@ -30,6 +33,7 @@ class History {
   factory History.fromJson(Map<String, dynamic> json) {
     return History(
       uid: json['uid'],
+      type: json['type'],
       user: json['user'],
       sentence: json['sentence'],
       pet: json['pet'],
@@ -41,6 +45,7 @@ class History {
 
   Map<String, dynamic> toJson() => {
         'uid': uid,
+        'type': type,
         'user': user,
         'sentence': sentence,
         'pet': pet,
